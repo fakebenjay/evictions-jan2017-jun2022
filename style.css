@@ -1,0 +1,312 @@
+div.container {
+  margin: 0 auto;
+  width: 800px;
+  padding: 0 !important;
+  text-align: center;
+}
+
+#article-body {
+  max-width: 800px;
+  /* 800 for A2J, 640 otherwise */
+}
+
+.form-select {
+  margin: 0 50px;
+  display: inline-block;
+  position: absolute;
+  font-size: 12pt;
+  text-align: center;
+}
+
+.form-select label {
+  font-weight: 100;
+}
+
+svg {
+  z-index: 10;
+}
+
+.d3-container {
+  text-align: left;
+  width: 100%;
+  line-height: normal;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.a2j {
+  background-color: #182538;
+  color: white;
+}
+
+.source {
+  color: white;
+}
+
+.years {
+  display: flex;
+  font-size: 12pt;
+  width: 100%;
+}
+
+.year {
+  width: 0px;
+}
+
+.a2j-bar {
+  display: block;
+  min-width: 100%;
+  height: 4px;
+  background-color: #B01116;
+  color: #182538;
+}
+
+.dek {
+  margin-top: 0.2em;
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-bottom: 10px;
+  font-size: 12pt;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.hed {
+  display: block;
+  margin-top: 10px;
+  margin-left: 10px;
+  margin-right: 10px;
+  font-size: 18pt;
+  font-weight: bold;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.legend-box {
+  font-size: 12pt;
+  text-align: center;
+  margin: 0 10px 1.5em 10px;
+}
+
+.legend {
+  list-style: none;
+  width: 100%;
+  margin: 0;
+  line-height: 1.5em;
+}
+
+.legend li {
+  margin: 0 5px;
+}
+
+.legend-entry {
+  margin: 0 5px;
+  line-height: normal;
+  display: inline;
+  white-space: nowrap;
+}
+
+.legend-sq {
+  display: inline-block;
+  border: 1px solid #fff !important;
+  width: 12pt !important;
+  height: 12pt !important;
+}
+
+.arrest-legend .legend-sq {
+  background-color: #B01116;
+}
+
+.summons-legend .legend-sq {
+  background-color: #F7F9F7;
+}
+
+.unknown-legend .legend-sq {
+  background-color: #707C9C;
+}
+
+.amerindian-legend .legend-sq {
+  background-color: #6BA292;
+}
+
+.aapi-legend .legend-sq {
+  background-color: #0072DC;
+}
+
+.black-legend .legend-sq {
+  background-color: #27A027;
+}
+
+.hispanic-legend .legend-sq {
+  background-color: #D5563A;
+}
+
+.white-legend .legend-sq {
+  background-color: #F9C80E;
+}
+
+.my-tooltip {
+  pointer-events: none;
+  text-align: center;
+  color: white;
+  overflow: visible;
+  position: absolute;
+  width: 200px !important;
+  background-color: #182538;
+  padding: 10px;
+  border: 1px solid #BE151D;
+  /* border-radius: 10px; */
+  font-family: Arial, Helvetica, sans-serif;
+  z-index: 500;
+  font-size: 10pt;
+}
+
+#chart-2 .my-tooltip {
+  width: 330px !important;
+}
+
+.tooltip-container {
+  padding: 0 15px;
+}
+
+.quit {
+  text-align: center;
+  display: none;
+  cursor: default;
+  height: 0;
+  margin-right: 5px;
+  color: #777;
+}
+
+.my-tooltip h2 {
+  font-size: 2em;
+}
+
+.hood {
+  margin: 0;
+  padding: 0;
+  display: inline-block;
+}
+
+.stats {
+  margin: 10px 0 0 0;
+  padding: 0;
+  display: inline-block;
+}
+
+.my-tooltip p {
+  margin: 0;
+}
+
+.orange-text {
+  color: #B01116;
+}
+
+svg {
+  color: #373739;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.bottom {
+  width: 100%;
+  position: relative;
+  display: inline-block;
+}
+
+#chart-1 .bottom, #chart-3 .bottom {
+  overflow: auto;
+  display: flex;
+  align-items: center;
+}
+
+.source {
+  display: inline-block;
+  width: 75%;
+  padding: 10px;
+  font-size: 10pt;
+}
+
+.gfx-logo {
+  display: inline-block;
+  width: 25%;
+  /* height: 100%; */
+  text-align: right;
+  padding: 0 10px;
+  bottom: 0;
+  float: right;
+}
+
+#chart-2 .gfx-logo {
+  /* height: 100%; */
+  text-align: right;
+  padding: 0 10px;
+  position: absolute;
+}
+
+.gfx-logo img {
+  width: 100%;
+  overflow: visible;
+}
+
+.chart {
+  padding: 0;
+  margin: 0;
+}
+
+/* Style the dots and lines by assigning a fill and stroke */
+.line {
+  fill: none;
+  stroke-width: 3;
+}
+
+.dot {
+  stroke: #fff;
+}
+
+@media screen and (min-width: 768px) {
+  #chart-1 .gfx-logo {
+    width: 15%;
+  }
+
+  #chart-1 .source {
+    width: 85%;
+  }
+
+  #chart-3 {
+    width: 50% !important;
+    float: right;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .my-tooltip {
+    min-width: 100% !important;
+    max-width: 100% !important;
+    position: relative !important;
+    overflow: auto;
+    margin-bottom: 30px;
+    border-radius: 0px !important;
+  }
+
+  .quit {
+    float: right;
+    display: inline;
+    width: 2%;
+  }
+
+  .form-select {
+    margin: 0 25px !important;
+    font-size: 10pt !important;
+    text-align: left;
+  }
+
+  .mobile-legend {
+    margin-top: 1em;
+    text-align: center;
+  }
+
+  #gfx-logo {
+    padding: 0 5px !important;
+  }
+
+  .years {
+    font-size: 10pt;
+  }
+}

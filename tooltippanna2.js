@@ -1,13 +1,14 @@
-function tipText1(values, closestKey) {
-  var plural = 'arrests'
-
-  return `<span class='quit'>x</span>
-  <div class="tooltip-container">
-  <p>The NYPD issued <strong>${numeral(values[closestKey]).format('0,0')} ${plural}</strong> for cannabis in Q${values.month} ${values.year}.</p>
-  </div>`
-}
+// function tipText1(values, closestKey) {
+//   var plural = 'arrests'
+//
+//   return `<span class='quit'>x</span>
+//   <div class="tooltip-container">
+//   <p>The NYPD issued <strong>${numeral(values[closestKey]).format('0,0')} ${plural}</strong> for cannabis in Q${values.month} ${values.year}.</p>
+//   </div>`
+// }
 
 function tipText2(data, month, year) {
+  var months = document.getElementById('month').children
   var values = data.properties
 
   var arrestAvg = arrestSubset.reduce((a, b) => {
@@ -18,7 +19,7 @@ function tipText2(data, month, year) {
   <div class="tooltip-container">
   <div class="tooltip-top">
   <h2>${values.modzcta}</h2>
-  <strong style="font-size:12pt;">for ${month} ${year}</strong>
+  <strong style="font-size:12pt;">for ${months[month-1].innerText} ${year}</strong>
   <br/><br/>
   <p style="font-size:13pt;width:100%;float:none;">Evictions: <strong style="color:${arrestScale(values['arrest'][year+month])};">${values['arrest'][year+month]}</strong><br/><span style="font-size:10pt;">(${numeral(values['arrest'][year+month]/arrestAvg).format('0,0%')} of average)</span></p>
   </div>

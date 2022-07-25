@@ -44,12 +44,16 @@ function dynamicSelect(year, month) {
     document.querySelector("option[value='11']").style.display = 'none'
     document.querySelector("option[value='12']").style.display = 'none'
   }
+
+  if (month > 6) {
+    document.querySelector("option[value='2022']").disabled = true
+    document.querySelector("option[value='2022']").style.display = 'none'
+  }
 }
 
 //Load in GeoJSON data
 d3.json("zcta-refined.json")
   .then(function(json) {
-
     var radio = 'arrest'
 
     var year = document.getElementById('year').value
@@ -63,9 +67,13 @@ d3.json("zcta-refined.json")
 
     var selectSubset = arrestSubset
 
+    // arrestScale = d3.scaleLinear()
+    //   .range(['#D7D9D7', '#B01116'])
+    //   .domain([0, d3.max(arrestSubset)])
+
     arrestScale = d3.scaleLinear()
       .range(['#D7D9D7', '#B01116'])
-      .domain([0, d3.max(arrestSubset)])
+      .domain([0, 27])
 
     var selectScale = arrestScale
 
@@ -91,7 +99,8 @@ d3.json("zcta-refined.json")
 
     legend.append("stop")
       .attr("offset", "100%")
-      .attr("stop-color", "#B01116")
+      .attr('stop-color', arrestScale(d3.max(selectSubset)))
+      // .attr("stop-color", "#B01116")
       .attr("stop-opacity", 1);
 
     key.append("rect")
@@ -172,7 +181,7 @@ d3.json("zcta-refined.json")
 
         arrestScale = d3.scaleLinear()
           .range(['#D7D9D7', '#B01116'])
-          .domain([0, d3.max(arrestSubset)])
+          .domain([0, 27])
 
         var selectScale = arrestScale
 
@@ -181,6 +190,9 @@ d3.json("zcta-refined.json")
 
         d3.select('.gradient-max')
           .text(d3.max(selectSubset))
+
+        d3.select(document.querySelector('#gradient').lastChild)
+          .attr('stop-color', arrestScale(d3.max(selectSubset)))
 
         d3.selectAll(`#chart-2 path.precinct`)
           .transition()

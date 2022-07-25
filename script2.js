@@ -132,9 +132,11 @@ d3.json("zcta-refined.json")
       .attr('class', 'precinct')
       .style("stroke", '#000')
       .style("stroke-width", '.5')
+      .style('pointer-events', d => d.properties.modzcta == 99999 ? 'none' : 'auto')
       .style("fill", (d) => {
         return selectScale(d['properties'][radio][year + month])
       })
+      .style('opacity', d => d.properties.modzcta == 99999 ? '0' : '1')
       .on("mouseover", (d) => {
         d3.selectAll('#chart-2 path')
           .style('stroke-width', 0.5)

@@ -51,6 +51,23 @@ function dynamicSelect(year, month) {
   }
 }
 
+function changeZip(d) {
+  d3.selectAll(`#chart-1 path.zcta`)
+    .style('stroke-width', .5)
+  if (!!d) {
+    d3.selectAll(`#chart-1 path.${d}`)
+      .style('stroke-width', 3)
+
+    mouseover(1, tipTextMap(JSON.parse(document.querySelector(`path.${d}`).dataset.data), document.querySelector('select#month').value, document.querySelector('select#year').value))
+    tooltipChart(ttChartData(JSON.parse(document.querySelector(`path.${d}`).dataset.data)))
+  } else {
+    d3.select(`#tooltip-1`)
+      .html("")
+      .attr('display', 'none')
+      .style("visibility", "hidden")
+  }
+}
+
 //Load in GeoJSON data
 d3.json("zcta-refined.json")
   .then(function(json) {
@@ -154,36 +171,23 @@ d3.json("zcta-refined.json")
       .enter()
       .append("path")
       .attr("d", path)
-      .attr('class', 'precinct')
+      .attr('class', d => `zcta zip-${d.properties.modzcta}`)
       .style("stroke", '#000')
       .style("stroke-width", '.5')
       .style('pointer-events', d => d.properties.modzcta == 99999 ? 'none' : 'auto')
+      .attr('data-data', (d) => {
+        return JSON.stringify(d.properties)
+      })
       .style("fill", (d) => {
         return selectScale(d['properties'][radio][year + month])
       })
       .style('opacity', d => d.properties.modzcta == 99999 ? '0' : '1')
-      .on("mouseover", (d) => {
-        d3.selectAll('#chart-1 path')
-          .style('stroke-width', 0.5)
-
-        d3.select(event.target)
-          .style('stroke-width', 2)
-          .raise()
-
-        selectedPrecinct = d.properties.precinct
-        var year = document.getElementById('year').value
-        dynamicSelect(year, document.getElementById('month').value)
-        var month = document.getElementById('month').value
-
-        mouseover(1, tipText1(d, month, year), d)
-
-        tooltipChart(ttChartData(d))
+      .on("mouseover mousemove", (d) => {
+        $("select.zipname").selectize()[0].selectize.setValue(event.target.classList[1])
       })
-      .on("mousemove", function(d) {
-        return mousemove(1)
-      })
-      .on("mouseout", function(d) {
-        return mouseout(1)
+      .on("mouseover mouseout", (d) => {
+        $("select.zipname").selectize()[0].selectize.setValue('')
+
       })
 
     d3.selectAll('.form-select')
@@ -219,15 +223,15 @@ d3.json("zcta-refined.json")
 
         d3.select(document.querySelector('#gradient').lastChild)
           .attr('stop-color', arrestScale(d3.max(selectSubset)))
+        //
+        // d3.selectAll(`#chart-1 path.precinct`)
+        //   .transition()
+        //   .duration(350)
+        //   .style("fill", (d) => {
+        //     return selectScale(d['properties'][radio][year + month])
+        //   })
 
-        d3.selectAll(`#chart-1 path.precinct`)
-          .transition()
-          .duration(350)
-          .style("fill", (d) => {
-            return selectScale(d['properties'][radio][year + month])
-          })
-
-        d3.selectAll(`#chart-1 path.precinct`)
+        d3.selectAll(`#chart-1 path.zcta`)
           .transition()
           .duration(350)
           .style("fill", (d) => {
@@ -235,8 +239,10 @@ d3.json("zcta-refined.json")
           })
 
         if (document.querySelector('#chart-1 .my-tooltip').style.visibility !== 'hidden') {
-          mouseover(1, tipText1(d, month, year))
-          tooltipChart(ttChartData(d, 'left'), 'left')
+          var zipcode = document.querySelector('.selectize-input .item').dataset.value.split('-')[1]
+          var selectedD = data.find(d => d.properties.modzcta == zipcode)
+          mouseover(1, tipTextMap(selectedD.properties, month, year))
+          tooltipChart(ttChartData(selectedD.properties, 'left'), 'left')
         }
 
         if (window.innerWidth > 767) {
@@ -304,7 +310,7 @@ d3.json("zcta-refined.json")
         'field': 'ZCTA5CE10',
         'direction': 'asc'
       }],
-      // onChange: zipChange,
+      onChange: changeZip,
       create: false
     })
     $select[0].selectize.refreshOptions(false)

@@ -1,4 +1,4 @@
-// function tipText1(values, closestKey) {
+// function tipTextMap(values, closestKey) {
 //   var plural = 'arrests'
 //
 //   return `<span class='quit'>x</span>
@@ -7,9 +7,10 @@
 //   </div>`
 // }
 
-function tipText1(data, month, year) {
+function tipTextMap(data, month, year) {
+
   var months = document.getElementById('month').children
-  var values = data.properties
+  var values = data
 
   var arrestAvg = arrestSubset.reduce((a, b) => {
     return a + b
@@ -32,10 +33,10 @@ function tipText1(data, month, year) {
 
 function ttChartData(data, side) {
   var metric = 'arrest'
-  var dataArray = Object.keys(data['properties'][metric]).map((k) => {
+  var dataArray = Object.keys(data[metric]).map((k) => {
     return {
       key: k,
-      val: data['properties'][metric][k]
+      val: data[metric][k]
     }
   })
   return dataArray.slice(0, dataArray.length - 1)
@@ -74,8 +75,12 @@ function tooltipChart(dataArray) {
     .ticks(3)
     .tickFormat(d => d)
 
-  var xAxisMini = d3.axisBottom(xScaleMini2)
+  var xAxisMini2 = d3.axisBottom(xScaleMini2)
     .ticks(7)
+    .tickFormat(d => d)
+
+  var xAxisMini = d3.axisBottom(xScaleMini)
+    .ticks(1)
     .tickFormat(d => d)
 
   var miniLine = d3.line()
@@ -95,28 +100,40 @@ function tooltipChart(dataArray) {
     .attr('class', 'minilines')
 
   var yRenderMini = miniG.append("g")
-    .attr("transform", `translate(0,0)`)
+    .attr("transform", `translate(10,0)`)
     .attr('class', 'y-axis')
     .call(yAxisMini)
     .selectAll(".tick")
-    .style('color', 'black')
+    .style('color', '#f3f3f3')
     .selectAll("text")
     .style('font-size', '5pt')
-    .attr("transform", `translate(15,0)`)
+    .attr("transform", `translate(4,0)`)
     .style("text-anchor", "middle")
     .style('fill', 'black')
 
-  var xRenderMini = miniG.append("g")
+  var xRenderMini2 = miniG.append("g")
     .attr("transform", `translate(0,${miniH-10})`)
     .attr('class', 'x-axis')
-    .call(xAxisMini)
+    .call(xAxisMini2)
     .selectAll(".tick")
-    .style('color', 'white')
+    .style('color', '#f3f3f3')
     .selectAll("text")
     .style('font-size', '5pt')
     .attr("transform", `translate(0,-5)`)
     .style("text-anchor", "middle")
     .style('fill', 'black')
+
+  // var xRenderMini = miniG.append("g")
+  //   .attr("transform", `translate(0,${miniH-50})`)
+  //   .attr('class', 'x-axis')
+  //   .call(xAxisMini)
+  //   .selectAll(".tick")
+  //   .style('color', '#f3f3f3')
+  //   .selectAll("text")
+  //   .style('font-size', '5pt')
+  //   .attr("transform", `translate(0,-5)`)
+  //   .style("text-anchor", "middle")
+  //   .style('fill', 'black')
 
   miniSVG.selectAll('.minilines')
     .data([dataArray])
@@ -187,7 +204,7 @@ function mouseoverLine(data, index) {
   var lineKeys = Object.keys(linePoints)
   var closestKey = Math.abs(y0 - linePoints[lineKeys[0]]) < Math.abs(y0 - linePoints[lineKeys[1]]) ? lineKeys[0] : lineKeys[1]
 
-  var html = tipText1(d, closestKey)
+  var html = tipTextMap(d, closestKey)
 
   d3.selectAll('.dot')
     .attr('r', 3)
@@ -219,7 +236,7 @@ function mouseoverLine(data, index) {
     })
 }
 
-function mouseover(i, tipText, d) {
+function mouseover(i, tipText) {
   var html = tipText
   d3.select(`#tooltip-${i}`)
     .html(html)

@@ -187,7 +187,6 @@ d3.json("zcta-refined.json")
       })
       .on("mouseover mouseout", (d) => {
         $("select.zipname").selectize()[0].selectize.setValue('')
-
       })
 
     d3.selectAll('.form-select')

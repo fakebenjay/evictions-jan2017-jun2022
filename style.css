@@ -262,10 +262,37 @@ svg {
   stroke: #fff;
 }
 
+.zipname .selectize-input, .countyname .selectize-input {
+  max-height: 36px;
+}
+
+.selectize-control.single .selectize-input {
+  /* height: 2.5em; */
+}
+
+.selectize-control {
+  width: 200px;
+  display: inline-block;
+}
+
+#chart-1 .chart svg {
+  margin-top: 0;
+}
+
 @media screen and (min-width: 768px) {
   #chart-3 {
     width: 50% !important;
     float: right;
+  }
+
+  .selectize-control {
+    width: 300px !important;
+  }
+}
+
+@media screen and (max-width: 400px) {
+  #chart-1 .chart svg {
+    margin-top: 50px;
   }
 }
 

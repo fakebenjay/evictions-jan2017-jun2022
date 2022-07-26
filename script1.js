@@ -1,198 +1,312 @@
+var rawWidth = document.getElementById('article-body').offsetWidth
+var w = rawWidth;
+var h = rawWidth * (3 / 5);
+//Define map projection
+var projection = d3.geoMercator()
+  .center([-74.0060, 40.7128])
+  .translate([(w / 2), (h / 2.06)])
+  .scale([w * 62]);
+//Define path generator
+var path = d3.geoPath()
+  .projection(projection);
 //Create SVG element
 var svg1 = d3.select("#chart-1 .chart")
   .append("svg")
-  .attr("width", width)
-  .attr("height", height);
-
-var tooltip2 = d3.select("#chart-1")
+  .attr("width", w)
+  .attr("height", h);
+var tooltip1 = d3.select("#chart-1")
   .append('div')
   .style('visibility', 'hidden')
   .attr('class', 'my-tooltip')
   .attr('id', 'tooltip-1')
 
-// Add Y scale
-var yScale = d3.scaleLinear()
-  .domain([4500, 0])
-  .range([0, height - (margin.top + margin.bottom)])
+var arrestSubset
+var arrestScale
+var selectedPrecinct = '1'
 
-// Define Y axis and format tick marks
-var yAxis = d3.axisLeft(yScale)
+function dynamicSelect(year, month) {
+  document.querySelectorAll('option').forEach(d => d.style.display = 'block')
+  document.querySelectorAll('option').forEach(d => d.disabled = false)
+  if (year == 2022) {
+    // if (month !== '06') {
+    //   document.querySelector("option[value='06']").selected = true
+    // }
+    document.querySelector("option[value='07']").disabled = true
+    document.querySelector("option[value='08']").disabled = true
+    document.querySelector("option[value='09']").disabled = true
+    document.querySelector("option[value='10']").disabled = true
+    document.querySelector("option[value='11']").disabled = true
+    document.querySelector("option[value='12']").disabled = true
+    document.querySelector("option[value='07']").style.display = 'none'
+    document.querySelector("option[value='08']").style.display = 'none'
+    document.querySelector("option[value='09']").style.display = 'none'
+    document.querySelector("option[value='10']").style.display = 'none'
+    document.querySelector("option[value='11']").style.display = 'none'
+    document.querySelector("option[value='12']").style.display = 'none'
+  }
 
-var yGrid = d3.axisLeft(yScale)
-  .tickSize(-width + margin.right + margin.left, 0, 0)
-  .tickFormat("")
+  if (month > 6) {
+    document.querySelector("option[value='2022']").disabled = true
+    document.querySelector("option[value='2022']").style.display = 'none'
+  }
+}
 
-// Render Y axis
-svg1.append("g")
-  .attr("transform", `translate(${margin.left},${margin.top})`)
-  .attr('class', 'y-axis')
-  .call(yAxis)
-  .style('color', 'white')
-  .selectAll("text")
-  .attr("transform", "translate(-10,0)")
-  .style("text-anchor", "middle")
+//Load in GeoJSON data
+d3.json("zcta-refined.json")
+  .then(function(json) {
+    var radio = 'arrest'
 
-// Render Y grid
-svg1.append("g")
-  .attr("transform", `translate(${margin.left},${margin.top})`)
-  .attr("class", "grid")
-  .style('color', '#777777')
-  .style('opacity', '0.3')
-  .call(yGrid)
+    var year = document.getElementById('year').value
+    dynamicSelect(year, document.getElementById('month').value)
+    var month = document.getElementById('month').value
 
-// Render lines g
-var linesG = svg1.append("g")
-  .attr('class', 'lines')
 
-// Add X scale
-var xScale = d3.scalePoint()
-  .range([margin.left, width - margin.right])
-  .domain(['2018 Q2', '2018 Q3', '2018 Q4', '2019 Q1', '2019 Q2', '2019 Q3', '2019 Q4', '2020 Q1', '2020 Q2', '2020 Q3', '2020 Q4', '2021 Q1'])
+    arrestSubset = json.features.map((d) => {
+      return d['properties']['arrest'][year + month]
+    })
 
-// Define X axis
-var xAxis = d3.axisBottom(xScale)
-  .tickFormat(d => d.slice(d.length - 2))
+    var selectSubset = arrestSubset
 
-//Render X axis
-svg1.append("g")
-  .attr("transform", `translate(0,${height-margin.bottom})`)
-  .attr('class', 'x-axis')
-  .style('color', 'white')
-  .call(xAxis)
-  .selectAll(".tick text")
-  .style('fill', (d) => {
-    return d.includes('2018') || d.includes('2020') ? '#999' : 'white'
-  })
-  .raise()
+    // arrestScale = d3.scaleLinear()
+    //   .range(['#D7D9D7', '#B01116'])
+    //   .domain([0, d3.max(arrestSubset)])
 
-d3.csv("https://assets.law360news.com/1390000/1390755/total-data.csv")
-  .then(function(csv) {
-    svg1.append('path')
-      .attr('class', `pandemic-line`)
-      .attr('d', d3.line()([
-        [xScale('2020 Q2') - (xScale('2018 Q2') / 3), yScale(4500) + margin.top],
-        [xScale('2020 Q2') - (xScale('2018 Q2') / 3), yScale(0) + margin.top]
-      ]))
-      .attr('stroke-width', 2)
-      .style('opacity', 1)
-      .style('stroke', '#F9C80E')
+    arrestScale = d3.scaleLinear()
+      .range(['#D7D9D7', '#B01116'])
+      .domain([0, 27])
 
-    svg1.append('text')
-      .attr('class', 'pandemic-label')
-      .attr('x', xScale('2020 Q2') - (xScale('2018 Q2') / 3) + 5)
-      .attr('y', yScale(4000))
-      .text('Start of')
-      .style('font-size', '10pt')
-      .style('fill', '#F9C80E')
+    var selectScale = arrestScale
 
-    svg1.append('text')
-      .attr('class', 'pandemic-label')
-      .attr('x', xScale('2020 Q2') - (xScale('2018 Q2') / 3) + 5)
-      .attr('y', yScale(3750))
-      .text('pandemic')
-      .style('font-size', '10pt')
-      .style('fill', '#F9C80E')
+    var legendHome = window.innerWidth > 767 ? '.form-select' : '.mobile-legend'
+    var key = d3.select(legendHome)
+      .append("svg")
+      .attr("width", 220)
+      .attr("height", 30)
 
-    var arrest = d3.line()
-      .x(function(d) {
-        return xScale(`${d.year} Q${d.quarter}`)
-      })
-      .y(function(d) {
-        return (height - margin.bottom) - yScale(4500 - d.arrest);
-      });
+    var legend = key.append("defs")
+      .append("svg:linearGradient")
+      .attr("id", "gradient")
+      .attr("x1", "0%")
+      .attr("y1", "100%")
+      .attr("x2", "100%")
+      .attr("y2", "100%")
+      .attr("spreadMethod", "pad");
 
-    var summons = d3.line()
-      .x(function(d) {
-        return xScale(`${d.year} Q${d.quarter}`)
-      })
-      .y(function(d) {
-        return (height - margin.bottom) - yScale(4500 - d.summons);
-      });
+    legend.append("stop")
+      .attr("offset", "0%")
+      .attr("stop-color", "#D7D9D7")
+      .attr("stop-opacity", 1);
 
-    svg1.selectAll('.lines')
-      .data([csv])
-      .append("path")
-      .attr("class", "line arrest")
-      .attr("d", (d) => {
-        return arrest(d)
-      })
-      .style('stroke', '#B01116')
+    legend.append("stop")
+      .attr("offset", "100%")
+      .attr('stop-color', arrestScale(d3.max(selectSubset)))
+      // .attr("stop-color", "#B01116")
+      .attr("stop-opacity", 1);
 
-    svg1.selectAll('.lines')
-      .data([csv])
-      .append("path")
-      .attr("class", "line summons")
-      .attr("d", (d) => {
-        return summons(d)
-      })
-      .style('stroke', '#D7D9D7');
+    key.append("rect")
+      .attr("width", 170)
+      .attr("height", 20)
+      .style("fill", "url(#gradient)")
+      .attr('stroke', 'black')
+      .attr('stroke-width', '1px')
+      .attr("transform", "translate(15,0)");
 
-    csv.unshift('dummy')
+    key.append('text')
+      .attr('class', 'gradient-min')
+      .style('fill', 'black')
+      .text(0)
+      .attr("transform", "translate(0,15)")
+      .attr('text-anchor', 'start')
 
-    svg1.selectAll(".lines")
-      .data(csv)
+    key.append('text')
+      .attr('class', 'gradient-max')
+      .style('fill', 'black')
+      .text(d3.max(selectSubset))
+      .attr("transform", "translate(190,15)")
+      .attr('text-anchor', 'start')
+
+    //Bind data and create one path per GeoJSON feature
+
+    json.features.forEach((d) => {
+      if (d.properties.modzcta == '99999') {
+        return null
+      }
+
+      var option = document.createElement("option")
+      option.text = `${d.properties.modzcta} (${d.properties.hood.split(': ')[1]})`
+      option.value = 'zip-' + d.properties.modzcta
+
+      option.setAttribute('boro', d.properties.hood.split(': ')[0])
+      option.setAttribute('data-data', `{
+        "zipCode": "${d.properties.modzcta}",
+        "boro": "${d.properties.hood.split(': ')[0].replaceAll('The Bronx, Manhattan', 'The Bronx')}",
+        "hood": "${d.properties.hood.split(': ')[1]}"
+      }`)
+      var vals = Array.prototype.slice.call(document.querySelector('select.zipname').children).map(d => d.value)
+
+      if (!vals.includes(option.value)) {
+        document.querySelector('select.zipname').add(option)
+      }
+    })
+
+    svg1.selectAll("path")
+      .data(json.features)
       .enter()
-      .append("circle") // Uses the enter().append() method
-      .attr("class", d => `dot arrest yr-${d.year}-q${d.quarter}`) // Assign a class for styling
-      .attr("cy", function(d) {
-        return (height - margin.bottom) - yScale(4500 - d.arrest);
+      .append("path")
+      .attr("d", path)
+      .attr('class', 'precinct')
+      .style("stroke", '#000')
+      .style("stroke-width", '.5')
+      .style('pointer-events', d => d.properties.modzcta == 99999 ? 'none' : 'auto')
+      .style("fill", (d) => {
+        return selectScale(d['properties'][radio][year + month])
       })
-      .attr("cx", function(d) {
-        return xScale(`${d.year} Q${d.quarter}`)
-      })
-      .attr("r", 3)
-      .style('fill', '#B01116')
+      .style('opacity', d => d.properties.modzcta == 99999 ? '0' : '1')
+      .on("mouseover", (d) => {
+        d3.selectAll('#chart-1 path')
+          .style('stroke-width', 0.5)
 
-    svg1.selectAll(".lines")
-      .data(csv)
-      .enter()
-      .append("circle") // Uses the enter().append() method
-      .attr("class", d => `dot summons yr-${d.year}-q${d.quarter}`) // Assign a class for styling
-      .attr("cy", function(d) {
-        return (height - margin.bottom) - yScale(4500 - d.summons);
-      })
-      .attr("cx", function(d) {
-        return xScale(`${d.year} Q${d.quarter}`)
-      })
-      .attr("r", 3)
-      .style('fill', '#F7F9F7')
-      .style('stroke', 'black')
+        d3.select(event.target)
+          .style('stroke-width', 2)
+          .raise()
 
-    svg1.append("rect")
-      .attr("transform", `translate(${margin.left}, ${margin.top})`)
-      .attr("class", "hover-overlay")
-      .attr("width", width - margin.right - margin.left)
-      .attr("height", height - margin.bottom - margin.top)
-      .attr('fill', 'none')
-      .attr('pointer-events', 'all')
-      .data([csv])
-      .on("mouseover mousemove touchstart touchmove", function(d) {
-        return mouseoverLine(d, 1)
+        selectedPrecinct = d.properties.precinct
+        var year = document.getElementById('year').value
+        dynamicSelect(year, document.getElementById('month').value)
+        var month = document.getElementById('month').value
+
+        mouseover(1, tipText1(d, month, year), d)
+
+        tooltipChart(ttChartData(d))
+      })
+      .on("mousemove", function(d) {
+        return mousemove(1)
       })
       .on("mouseout", function(d) {
         return mouseout(1)
-      });
+      })
 
-    d3.selectAll('.hover-overlay')
-      .raise()
+    d3.selectAll('.form-select')
+      .datum(json.features)
+      .on('change', function(data) {
+        let d = data.find((p) => {
+          return p.properties.precinct === selectedPrecinct
+        })
 
-    linesG.raise()
+        var radio = 'arrest'
 
-    d3.selectAll('circle')
-      .raise()
+        var year = document.getElementById('year').value
+        dynamicSelect(year, document.getElementById('month').value)
+        var month = document.getElementById('month').value
+
+        arrestSubset = json.features.map((d) => {
+          return d['properties']['arrest'][year + month]
+        })
+
+        var selectSubset = arrestSubset
+
+        arrestScale = d3.scaleLinear()
+          .range(['#D7D9D7', '#B01116'])
+          .domain([0, 27])
+
+        var selectScale = arrestScale
+
+        d3.select('.gradient-min')
+          .text(0)
+
+        d3.select('.gradient-max')
+          .text(d3.max(selectSubset))
+
+        d3.select(document.querySelector('#gradient').lastChild)
+          .attr('stop-color', arrestScale(d3.max(selectSubset)))
+
+        d3.selectAll(`#chart-1 path.precinct`)
+          .transition()
+          .duration(350)
+          .style("fill", (d) => {
+            return selectScale(d['properties'][radio][year + month])
+          })
+
+        d3.selectAll(`#chart-1 path.precinct`)
+          .transition()
+          .duration(350)
+          .style("fill", (d) => {
+            return selectScale(d['properties'][radio][year + month])
+          })
+
+        if (document.querySelector('#chart-1 .my-tooltip').style.visibility !== 'hidden') {
+          mouseover(1, tipText1(d, month, year))
+          tooltipChart(ttChartData(d, 'left'), 'left')
+          tooltipChart(ttChartData(d, 'right'), 'right')
+        }
+
+        if (window.innerWidth > 767) {
+          d3.selectAll('#tooltip-2')
+            .attr('display', 'none')
+            .style("visibility", "hidden")
+        }
+      })
+    return json.features
   })
-
-d3.selectAll('.years')
-  .style('margin', `0 ${margin.right}px 10px 0`)
-
-d3.selectAll('.year-2018')
-  .style('padding', `0 0 0 11%`)
-
-d3.selectAll('.year-2019')
-  .style('padding', `0 0 0 29%`)
-
-d3.selectAll('.year-2020')
-  .style('padding', `0 0 0 32%`)
-
-d3.selectAll('.year-2021')
-  .style('padding', `0 0 0 17%`)
+  .then(function(json) {
+    document.querySelector('select.zipname').selectedIndex = -1
+    var $select = $("select.zipname").selectize({
+      placeholder: 'Select a zip...',
+      allowEmptyOption: true,
+      labelField: 'ZCTA5CE10',
+      valueField: 'value',
+      searchField: ['ZCTA5CE10', 'name', 'boro'],
+      dataAttr: 'data-data',
+      render: {
+        option: function(data) {
+          return `<div class='option ${data.value} ${data.boro.toLowerCase().replaceAll(' ', '-')}'
+        data-value='${data.value}'
+        data-zip-name='${data.zipCode}'
+        data-boro='${data.boro}'
+        data-hood="${data.hood}"
+        >${data.ZCTA5CE10}</div>`;
+        },
+        optgroup: function(data) {
+          var optgroup = `<div class='optgroup ${data.id.toLowerCase().replaceAll(' ', '-')}' data-group='${data.id}'>${data.html}</div>`;
+          return optgroup
+        }
+      },
+      optgroups: [{
+          $order: 1,
+          id: 'Manhattan',
+          name: 'Manhattan',
+        },
+        {
+          $order: 2,
+          id: 'The Bronx',
+          name: 'The Bronx'
+        },
+        {
+          $order: 3,
+          id: 'Brooklyn',
+          name: 'Brooklyn'
+        },
+        {
+          $order: 4,
+          id: 'Queens',
+          name: 'Queens'
+        },
+        {
+          $order: 5,
+          id: 'Staten Island',
+          name: 'Staten Island'
+        }
+      ],
+      optgroupField: 'boro',
+      optgroupLabelField: 'name',
+      optgroupValueField: 'id',
+      lockOptgroupOrder: true,
+      sortField: [{
+        'field': 'ZCTA5CE10',
+        'direction': 'asc'
+      }],
+      // onChange: zipChange,
+      create: false
+    })
+    $select[0].selectize.refreshOptions(false)
+  });

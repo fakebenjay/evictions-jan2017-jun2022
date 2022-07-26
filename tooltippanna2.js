@@ -7,7 +7,7 @@
 //   </div>`
 // }
 
-function tipText2(data, month, year) {
+function tipText1(data, month, year) {
   var months = document.getElementById('month').children
   var values = data.properties
 
@@ -19,6 +19,7 @@ function tipText2(data, month, year) {
   <div class="tooltip-container">
   <div class="tooltip-top">
   <h2>${values.modzcta}</h2>
+  <small style="line-height:normal;">${values.hood}</small><br/>
   <strong style="font-size:12pt;">for ${months[month-1].innerText} ${year}</strong>
   <br/><br/>
   <p style="font-size:13pt;width:100%;float:none;">Evictions: <strong style="color:${arrestScale(values['arrest'][year+month])};">${values['arrest'][year+month]}</strong><br/><span style="font-size:10pt;">(${numeral(values['arrest'][year+month]/arrestAvg).format('0,0%')} of average)</span></p>
@@ -37,7 +38,7 @@ function ttChartData(data, side) {
       val: data['properties'][metric][k]
     }
   })
-  return dataArray
+  return dataArray.slice(0, dataArray.length - 1)
 }
 
 function tooltipChart(dataArray) {
@@ -47,14 +48,15 @@ function tooltipChart(dataArray) {
   var metric = 'arrest'
   var colorMax = -0.749023438
   var max = 0
+
   for (let i = 0; i < dataArray.length; i++) {
     max = dataArray[i]['val'] > max ? dataArray[i]['val'] : max
   }
 
   var miniColorScale = d3.scaleLinear()
-    .domain([-1, colorMax])
+    .domain([0, 916.625])
     .range(['#f6f7f6', '#b01116'])
-    .clamp(true)
+  // .clamp(true)
 
   var xScaleMini = d3.scalePoint()
     .range([miniMargin, miniW - miniMargin])
@@ -87,12 +89,19 @@ function tooltipChart(dataArray) {
     .attr("d", (d) => {
       return miniLine(d)
     })
+    // .style('stroke', (d) => {
+    //   if (d[0].val === 0 && d[d.length - 1].val === 0) {
+    //     return miniColorScale(0)
+    //   } else {
+    //     return miniColorScale((d[d.length - 1].val - d[0].val) / d[0].val)
+    //   }
+    // })
     .style('stroke', (d) => {
-      if (d[0].val === 0 && d[d.length - 1].val === 0) {
-        return miniColorScale(-1)
-      } else {
-        return miniColorScale((d[d.length - 1].val - d[0].val) / d[0].val)
-      }
+      // var total = d.map(d => d.val).reduce((n, q) => {
+      //   return n + q
+      // })
+      // return miniColorScale(total)
+      return 'black'
     })
 
   var monthDatum = dataArray.filter((d) => {
@@ -112,7 +121,8 @@ function tooltipChart(dataArray) {
       return xScaleMini(d.key)
     })
     .attr("r", 4)
-    .style('stroke', '#F7F9F7')
+    // .style('stroke', '#F7F9F7')
+    .style('stroke', 'black')
     .style('fill', d => selectScale(d.val))
 }
 
@@ -184,7 +194,7 @@ function mouseover(i, tipText, d) {
 
   d3.select(`#tooltip-${i} .quit`)
     .on('click', () => {
-      d3.selectAll('#chart-2 path')
+      svg1.selectAll(`path`)
         .style('stroke-width', 0.5)
 
       d3.select(`#tooltip-${i}`)

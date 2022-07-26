@@ -1,12 +1,12 @@
 div.container {
   margin: 0 auto;
-  width: 800px;
+  /* width: 800px; */
   padding: 0 !important;
   text-align: center;
 }
 
 #article-body {
-  max-width: 800px;
+  max-width: 640px;
   /* 800 for A2J, 640 otherwise */
 }
 
@@ -16,6 +16,7 @@ div.container {
   position: absolute;
   font-size: 12pt;
   text-align: center;
+  max-width: 40%;
 }
 
 .form-select label {
@@ -34,12 +35,12 @@ svg {
 }
 
 .a2j {
-  background-color: #182538;
-  color: white;
+  background-color: #f3f3f3;
+  color: black;
 }
 
 .source {
-  color: white;
+  color: black;
 }
 
 .years {
@@ -143,22 +144,22 @@ svg {
 }
 
 .my-tooltip {
-  pointer-events: none;
+  /* pointer-events: none; */
   text-align: center;
-  color: white;
+  color: black;
   overflow: visible;
   position: absolute;
   width: 200px !important;
-  background-color: #182538;
+  background-color: #f3f3f3;
   padding: 10px;
-  border: 1px solid #BE151D;
+  border: 1px solid black;
   /* border-radius: 10px; */
   font-family: Arial, Helvetica, sans-serif;
   z-index: 500;
   font-size: 10pt;
 }
 
-#chart-2 .my-tooltip {
+#chart-1 .my-tooltip {
   width: 330px !important;
 }
 
@@ -233,11 +234,11 @@ svg {
   float: right;
 }
 
-#chart-2 .gfx-logo {
+#chart-1 .gfx-logo {
   /* height: 100%; */
   text-align: right;
   padding: 0 10px;
-  position: absolute;
+  /* position: absolute; */
 }
 
 .gfx-logo img {
@@ -261,14 +262,6 @@ svg {
 }
 
 @media screen and (min-width: 768px) {
-  #chart-1 .gfx-logo {
-    width: 15%;
-  }
-
-  #chart-1 .source {
-    width: 85%;
-  }
-
   #chart-3 {
     width: 50% !important;
     float: right;
@@ -287,8 +280,9 @@ svg {
 
   .quit {
     float: right;
-    display: inline;
+    display: block;
     width: 2%;
+    height: 12pt;
   }
 
   .form-select {

@@ -7,8 +7,11 @@
   <script type="text/javascript" src="https://assets.law360news.com/1390000/1390755/d3.v5.min.js"></script>
   <script src="https://assets.law360news.com/1390000/1390755/topojson.v2.min.js"></script>
   <script src="https://assets.law360news.com/1390000/1390755/numeral.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
   <script src="tooltippanna2.js"></script>
-  <script src="https://assets.law360news.com/1390000/1390755/offsetting.js" defer></script>
+  <script src="offsetting.js" defer></script>
+  <script type="text/javascript" src="selectize.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="selectize.css" />
   <link rel="stylesheet" href="style.css">
   </link>
   <link rel="stylesheet" href="https://static.law360news.com/201909/assets/responsive-next-32ff265ae0f6b45b6915cb7a719db907337029c2785605cef88fffa548aadd9e.css">
@@ -20,14 +23,13 @@
 
 
     <div id="article-body">
-      <div class="d3-container a2j" id="chart-2">
+      <div class="d3-container a2j" id="chart-1">
         <div class="a2j-bar"></div>
-        <span class='hed'>Marijuana Enforcement Is Higher In Poorer Neighborhoods</span>
-        <p class="dek">Precinct data shows higher numbers of arrests and summonses for marijuana in poorer neighborhoods, which tend to be majority-Black and Latinx. </p>
+        <span class='hed'>Court-Ordered Evictions Across NYC, 2017 to Present</span>
+        <p class="dek">Evictions are inching back from a pandemic-induced freeze. </p>
 
         <div class="chart">
           <div class='form-select'>
-            <p><strong>Select</strong></p>
             <!-- <input type="radio" id="arrest" name="drone" value="arrest">
             <label for="huey">Arrests</label>
             <br />
@@ -35,6 +37,8 @@
             <label for="huey">Summonses</label>
             <br />
             <br /> -->
+            <select class="zipname" name="zipname">
+            </select>
             <p><strong>Timeframe</strong></p>
             <select id="year">
               <option value='2017'>2017</option>
@@ -68,7 +72,7 @@
         </div>
         <span class="bottom"><span class="source">Source: NYPD</span><span class="gfx-logo"><img src="https://assets.law360news.com/1390000/1390755/logo-a2j.jpg" style="width:100%;" /></span></span>
       </div>
-      <script type="text/javascript" src="script2.js" defer></script>
+      <script type="text/javascript" src="script1.js" defer></script>
 
 
 

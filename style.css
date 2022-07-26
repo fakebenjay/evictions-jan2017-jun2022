@@ -149,7 +149,7 @@ svg {
   color: black;
   overflow: visible;
   position: absolute;
-  width: 200px !important;
+  /* width: 200px !important; */
   background-color: #f3f3f3;
   padding: 10px;
   border: 1px solid black;
@@ -160,7 +160,8 @@ svg {
 }
 
 #chart-1 .my-tooltip {
-  width: 330px !important;
+  width: 100% !important;
+  position: relative;
 }
 
 .tooltip-container {

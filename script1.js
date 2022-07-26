@@ -237,7 +237,6 @@ d3.json("zcta-refined.json")
         if (document.querySelector('#chart-1 .my-tooltip').style.visibility !== 'hidden') {
           mouseover(1, tipText1(d, month, year))
           tooltipChart(ttChartData(d, 'left'), 'left')
-          tooltipChart(ttChartData(d, 'right'), 'right')
         }
 
         if (window.innerWidth > 767) {

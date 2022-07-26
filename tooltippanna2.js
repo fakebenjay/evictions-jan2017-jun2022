@@ -22,7 +22,7 @@ function tipText1(data, month, year) {
   <small style="line-height:normal;">${values.hood}</small><br/>
   <strong style="font-size:12pt;">for ${months[month-1].innerText} ${year}</strong>
   <br/><br/>
-  <p style="font-size:13pt;width:100%;float:none;">Evictions: <strong style="color:${arrestScale(values['arrest'][year+month])};">${values['arrest'][year+month]}</strong><br/><span style="font-size:10pt;">(${numeral(values['arrest'][year+month]/arrestAvg).format('0,0%')} of average)</span></p>
+  <p style="font-size:13pt;width:100%;float:none;">Evictions: <strong style="color:${values['arrest'][year+month] > 12 ? 'white':'black'};background-color:${arrestScale(values['arrest'][year+month])};">&nbsp;${values['arrest'][year+month]}&nbsp;</strong><br/><span style="font-size:10pt;">(${numeral(values['arrest'][year+month]/arrestAvg).format('0,0%')} of average)</span></p>
   </div>
   <div class="tooltip-bottom">
   <div class="tt-chart" style="width:100%;float:none;"></div>
@@ -62,9 +62,21 @@ function tooltipChart(dataArray) {
     .range([miniMargin, miniW - miniMargin])
     .domain(["201701", "201702", "201703", "201704", "201705", "201706", "201707", "201708", "201709", "201710", "201711", "201712", "201801", "201802", "201803", "201804", "201805", "201806", "201807", "201808", "201809", "201810", "201811", "201812", "201901", "201902", "201903", "201904", "201905", "201906", "201907", "201908", "201909", "201910", "201911", "201912", "202001", "202002", "202003", "202004", "202005", "202006", "202007", "202008", "202009", "202010", "202011", "202012", "202101", "202102", "202103", "202104", "202105", "202106", "202107", "202108", "202109", "202110", "202111", "202112", "202201", "202202", "202203", "202204", "202205", "202206"])
 
+  var xScaleMini2 = d3.scaleLinear()
+    .range([miniMargin, miniW - miniMargin])
+    .domain([2017, 2022.5])
+
   var yScaleMini = d3.scaleLinear()
     .domain([max, 0])
     .range([miniMargin, miniH - miniMargin])
+
+  var yAxisMini = d3.axisLeft(yScaleMini)
+    .ticks(3)
+    .tickFormat(d => d)
+
+  var xAxisMini = d3.axisBottom(xScaleMini2)
+    .ticks(7)
+    .tickFormat(d => d)
 
   var miniLine = d3.line()
     .x(function(d) {
@@ -81,6 +93,30 @@ function tooltipChart(dataArray) {
 
   var miniG = miniSVG.append("g")
     .attr('class', 'minilines')
+
+  var yRenderMini = miniG.append("g")
+    .attr("transform", `translate(0,0)`)
+    .attr('class', 'y-axis')
+    .call(yAxisMini)
+    .selectAll(".tick")
+    .style('color', 'black')
+    .selectAll("text")
+    .style('font-size', '5pt')
+    .attr("transform", `translate(15,0)`)
+    .style("text-anchor", "middle")
+    .style('fill', 'black')
+
+  var xRenderMini = miniG.append("g")
+    .attr("transform", `translate(0,${miniH-10})`)
+    .attr('class', 'x-axis')
+    .call(xAxisMini)
+    .selectAll(".tick")
+    .style('color', 'white')
+    .selectAll("text")
+    .style('font-size', '5pt')
+    .attr("transform", `translate(0,-5)`)
+    .style("text-anchor", "middle")
+    .style('fill', 'black')
 
   miniSVG.selectAll('.minilines')
     .data([dataArray])
@@ -189,8 +225,8 @@ function mouseover(i, tipText, d) {
     .html(html)
     .attr('display', 'block')
     .style("visibility", "visible")
-    .style('top', topTT(i))
-    .style('left', leftTT(i))
+  // .style('top', topTT(i))
+  // .style('left', leftTT(i))
 
   d3.select(`#tooltip-${i} .quit`)
     .on('click', () => {
@@ -210,8 +246,8 @@ function mousemove(i) {
   if (window.innerWidth > 767) {
     d3.select(`#tooltip-${i}`)
       .style("visibility", "visible")
-      .style('top', topTT(i))
-      .style('left', leftTT(i))
+    // .style('top', topTT(i))
+    // .style('left', leftTT(i))
   }
 }
 

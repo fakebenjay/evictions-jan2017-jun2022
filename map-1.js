@@ -70,7 +70,7 @@ function changeZip(d) {
 }
 
 //Load in GeoJSON data
-d3.json("zcta-refined.json")
+d3.json("zcta-refined-nodupes.json")
   .then(function(json) {
     var radio = 'arrest'
 
@@ -192,9 +192,29 @@ d3.json("zcta-refined.json")
         }
       })
 
+    var citywideMonthTotal = d3.select(legendHome)
+      .append("span")
+      .style('width', '100%')
+      .style('display', 'block')
+      .datum(json.features)
+      .text((d) => {
+        var counts = d.map((a) => {
+          return a['properties'][radio][year + month]
+        })
+        var total = counts.reduce((a, b) => {
+          return a + b
+        })
+        return `${numeral(total).format('0,0')} evictions citywide`
+      })
+      .attr("transform", "translate(0,15)")
+      .attr('text-anchor', 'start')
+
     d3.selectAll('.form-select')
       .datum(json.features)
       .on('change', function(data) {
+
+
+
         let d = data.find((p) => {
           return p.properties.precinct === selectedPrecinct
         })
@@ -204,6 +224,17 @@ d3.json("zcta-refined.json")
         var year = document.getElementById('year').value
         dynamicSelect(year, document.getElementById('month').value)
         var month = document.getElementById('month').value
+
+        citywideMonthTotal
+          .text((d) => {
+            var counts = d.map((a) => {
+              return a['properties'][radio][year + month]
+            })
+            var total = counts.reduce((a, b) => {
+              return a + b
+            })
+            return `${numeral(total).format('0,0')} evictions citywide`
+          })
 
         arrestSubset = json.features.map((d) => {
           return d['properties']['arrest'][year + month]

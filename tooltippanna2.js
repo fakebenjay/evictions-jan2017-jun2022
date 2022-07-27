@@ -13,6 +13,18 @@ function tipTextLine2(data) {
   var month = data.monthyear.split('/')[1]
   var values = data
 
+  var manhattanLine = `<p style="font-size:12pt;width:100%;float:none;"><span style="background-color:#F9C80E;color:black;">&nbsp;Manhattan&nbsp;</span> <strong>${values.manhattan}</strong>${values.citywide > 0 ? ` <small>(${numeral(values.manhattan/values.citywide).format('0%')} of total)</small>` : ''}</p>`
+  var bronxLine = `<p style="font-size:12pt;width:100%;float:none;"><span style="background-color:#6ba292;color:white;">&nbsp;The Bronx&nbsp;</span> <strong>${values.bronx}</strong>${values.citywide > 0 ? ` <small>(${numeral(values.bronx/values.citywide).format('0%')} of total)</small>` : ''}</p>`
+  var brooklynLine = `<p style="font-size:12pt;width:100%;float:none;"><span style="background-color:#ed6a5a;color:black;">&nbsp;Brooklyn&nbsp;</span> <strong>${values.brooklyn}</strong>${values.citywide > 0 ? ` <small>(${numeral(values.brooklyn/values.citywide).format('0%')} of total)</small>` : ''}</p>`
+  var queensLine = `<p style="font-size:12pt;width:100%;float:none;"><span style="background-color:#654f6f;color:white;">&nbsp;Queens&nbsp;</span> <strong>${values.queens}</strong>${values.citywide > 0 ? ` <small>(${numeral(values.queens/values.citywide).format('0%')} of total)</small>` : ''}</p>`
+  var statenLine = `<p style="font-size:12pt;width:100%;float:none;"><span style="background-color:#56A9DE;color:black;">&nbsp;Staten Island&nbsp;</span> <strong>${values.staten}</strong>${values.citywide > 0 ? ` <small>(${numeral(values.staten/values.citywide).format('0%')} of total)</small>` : ''}</p>`
+
+  var lines = [manhattanLine, bronxLine, brooklynLine, queensLine, statenLine]
+  lines.sort((b, a) => {
+    return parseInt(values[a.split('&nbsp;')[1].toLowerCase().replaceAll('the ', '').replaceAll(' island', '')]) - parseInt(values[b.split('&nbsp;')[1].toLowerCase().replaceAll('the ', '').replaceAll(' island', '')])
+  })
+
+
   return `<span class='quit'>x</span>
   <div class="tooltip-container">
   <div class="tooltip-top">
@@ -20,11 +32,7 @@ function tipTextLine2(data) {
   <strong style="font-size:12pt;">for ${months[month-1].innerText} ${year}</strong>
   <br/><br/>
   <p style="font-size:14pt;width:100%;float:none;"><span style="background-color:#142a43;color:white;">&nbsp;Citywide&nbsp;</span> <strong>${numeral(values.citywide).format('0,0')}</strong></p><br/>
-  <p style="font-size:12pt;width:100%;float:none;"><span style="background-color:#F9C80E;color:black;">&nbsp;Manhattan&nbsp;</span> <strong>${values.manhattan}</strong>${values.citywide > 0 ? ` <small>(${numeral(values.manhattan/values.citywide).format('0%')} of total)</small>` : ''}</p>
-  <p style="font-size:12pt;width:100%;float:none;"><span style="background-color:#6ba292;color:white;">&nbsp;The Bronx&nbsp;</span> <strong>${values.bronx}</strong>${values.citywide > 0 ? ` <small>(${numeral(values.bronx/values.citywide).format('0%')} of total)</small>` : ''}</p>
-  <p style="font-size:12pt;width:100%;float:none;"><span style="background-color:#ed6a5a;color:black;">&nbsp;Brooklyn&nbsp;</span> <strong>${values.brooklyn}</strong>${values.citywide > 0 ? ` <small>(${numeral(values.brooklyn/values.citywide).format('0%')} of total)</small>` : ''}</p>
-  <p style="font-size:12pt;width:100%;float:none;"><span style="background-color:#654f6f;color:white;">&nbsp;Queens&nbsp;</span> <strong>${values.queens}</strong>${values.citywide > 0 ? ` <small>(${numeral(values.queens/values.citywide).format('0%')} of total)</small>` : ''}</p>
-  <p style="font-size:12pt;width:100%;float:none;"><span style="background-color:#56A9DE;color:black;">&nbsp;Staten Island&nbsp;</span> <strong>${values.staten}</strong>${values.citywide > 0 ? ` <small>(${numeral(values.staten/values.citywide).format('0%')} of total)</small>` : ''}</p>
+${lines.join('')}
   </div>
   </div>`
 }
@@ -37,14 +45,20 @@ function tipTextMap(data, month, year) {
     return a + b
   }) / arrestSubset.length
 
+  var zipTotal = Object.keys(values.arrest).map(k => values.arrest[k]).reduce((a, b) => a + b)
+
   return `<span class='quit'>x</span>
   <div class="tooltip-container">
   <div class="tooltip-top">
   <h2>${values.modzcta}</h2>
-  <small style="line-height:normal;">${values.hood}</small><br/>
+  <p style="line-height:normal;">${values.hood}</p>
   <strong style="font-size:12pt;">for ${months[month-1].innerText} ${year}</strong>
   <br/><br/>
-  <p style="font-size:13pt;width:100%;float:none;">Evictions: <strong style="color:${values['arrest'][year+month] > 12 ? 'white':'black'};background-color:${arrestScale(values['arrest'][year+month])};">&nbsp;${values['arrest'][year+month]}&nbsp;</strong><br/><span style="font-size:10pt;">(${numeral(values['arrest'][year+month]/arrestAvg).format('0,0%')} of average)</span></p>
+  <p style="font-size:13pt;width:100%;float:none;">Evictions: <strong style="color:${values['arrest'][year+month] > 12 ? 'white':'black'};background-color:${arrestScale(values['arrest'][year+month])};">&nbsp;${values['arrest'][year+month]}&nbsp;</strong>
+  <br/>
+  <p style="font-size:9pt;"><strong>${numeral(values['arrest'][year+month]/arrestAvg).format('0,0%')}</strong> of this month's average</p>
+  <p style="font-size:9pt;"><strong>${numeral(zipTotal).format('0,0')}</strong> evictions here, from January 2017 to June 2022</p>
+  </p>
   </div>
   <div class="tooltip-bottom">
   <div class="tt-chart" style="width:100%;float:none;"></div>
@@ -214,13 +228,23 @@ function mouseoverLine(data, index) {
   var d = (x0 + margin.left) - xScale2(d0.monthyear.split('/')[0]) + xScaleMonth2(d0.monthyear.split('/')[1]) > xScale2(d1.monthyear.split('/')[0]) + xScaleMonth2(d1.monthyear.split('/')[1]) - (x0 + margin.left) ? d1 : d0;
   var html = tipTextLine2(d)
 
-  // d3.selectAll(`#chart-${index} .dot`)
-  //   .attr('r', 1)
-  //   .lower()
+  d3.selectAll(`#chart-${index} .dot`)
+    .attr('r', 1)
+    .lower()
 
   d3.selectAll(`#chart-${index} .dot.yr-${d.monthyear.replaceAll('/','')}`)
     .attr('r', 8)
     .raise()
+
+  var boros = Object.keys(d).slice(1, 6)
+  boros.sort((a, b) => {
+    return parseInt(d[a]) - parseInt(d[b])
+  })
+
+  boros.forEach((i) => {
+    d3.select(`#chart-${index} .dot.yr-${d.monthyear.replaceAll('/','')}.${i}`)
+      .raise()
+  })
 
   d3.select(`#tooltip-${index}`)
     .html(html)
@@ -315,7 +339,7 @@ function topTT(d) {
 function leftTT(d) {
   var offsetParent = document.querySelector(`#chart-${d} .chart`).offsetParent
   var offX = offsetParent.offsetLeft
-  var cursorX = 5
+  var cursorX = 25
 
   var windowWidth = window.innerWidth
   var cw = document.querySelector(`#tooltip-${d}`).clientWidth

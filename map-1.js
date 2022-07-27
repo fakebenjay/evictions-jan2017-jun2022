@@ -57,6 +57,7 @@ function changeZip(d) {
   if (!!d) {
     d3.selectAll(`#chart-1 path.${d}`)
       .style('stroke-width', 3)
+      .raise()
 
     mouseover(1, tipTextMap(JSON.parse(document.querySelector(`path.${d}`).dataset.data), document.querySelector('select#month').value, document.querySelector('select#year').value))
     tooltipChart(ttChartData(JSON.parse(document.querySelector(`path.${d}`).dataset.data)))

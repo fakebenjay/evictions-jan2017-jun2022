@@ -1,7 +1,7 @@
 // set the dimensions and margins of the graph
 var margin = {
   top: 10,
-  right: 40,
+  right: 10,
   bottom: 25,
   left: 40
 }
@@ -30,7 +30,7 @@ var width = rawWidth;
 var height = 300;
 
 var tickNums = window.innerWidth > 767 ? 20 : 10
-margin.right = window.innerWidth > 767 ? 40 : 20
+// margin.right = window.innerWidth > 767 ? 40 : 20
 
 function wrapText(text, width) {
   text.each(function() {

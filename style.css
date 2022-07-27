@@ -17,6 +17,11 @@ div.container {
   font-size: 12pt;
   text-align: center;
   max-width: 40%;
+  pointer-events: none;
+}
+
+.form-select * {
+  pointer-events: all;
 }
 
 .form-select label {
@@ -258,10 +263,12 @@ svg {
 .line {
   fill: none;
   stroke-width: 3;
+  pointer-events: none;
 }
 
 .dot {
   stroke: #fff;
+  pointer-events: none;
 }
 
 .zipname .selectize-input, .countyname .selectize-input {

@@ -7,8 +7,29 @@
 //   </div>`
 // }
 
-function tipTextMap(data, month, year) {
+function tipTextLine2(data) {
+  var months = document.getElementById('month').children
+  var year = data.monthyear.split('/')[0]
+  var month = data.monthyear.split('/')[1]
+  var values = data
 
+  return `<span class='quit'>x</span>
+  <div class="tooltip-container">
+  <div class="tooltip-top">
+  <h2>Evictions Executed</h2>
+  <strong style="font-size:12pt;">for ${months[month-1].innerText} ${year}</strong>
+  <br/><br/>
+  <p style="font-size:14pt;width:100%;float:none;"><span style="background-color:#142a43;color:white;">&nbsp;Citywide&nbsp;</span> <strong>${numeral(values.citywide).format('0,0')}</strong></p><br/>
+  <p style="font-size:12pt;width:100%;float:none;"><span style="background-color:#F9C80E;color:black;">&nbsp;Manhattan&nbsp;</span> <strong>${values.manhattan}</strong>${values.citywide > 0 ? ` <small>(${numeral(values.manhattan/values.citywide).format('0%')} of total)</small>` : ''}</p>
+  <p style="font-size:12pt;width:100%;float:none;"><span style="background-color:#6ba292;color:white;">&nbsp;The Bronx&nbsp;</span> <strong>${values.bronx}</strong>${values.citywide > 0 ? ` <small>(${numeral(values.bronx/values.citywide).format('0%')} of total)</small>` : ''}</p>
+  <p style="font-size:12pt;width:100%;float:none;"><span style="background-color:#ed6a5a;color:black;">&nbsp;Brooklyn&nbsp;</span> <strong>${values.brooklyn}</strong>${values.citywide > 0 ? ` <small>(${numeral(values.brooklyn/values.citywide).format('0%')} of total)</small>` : ''}</p>
+  <p style="font-size:12pt;width:100%;float:none;"><span style="background-color:#654f6f;color:white;">&nbsp;Queens&nbsp;</span> <strong>${values.queens}</strong>${values.citywide > 0 ? ` <small>(${numeral(values.queens/values.citywide).format('0%')} of total)</small>` : ''}</p>
+  <p style="font-size:12pt;width:100%;float:none;"><span style="background-color:#56A9DE;color:black;">&nbsp;Staten Island&nbsp;</span> <strong>${values.staten}</strong>${values.citywide > 0 ? ` <small>(${numeral(values.staten/values.citywide).format('0%')} of total)</small>` : ''}</p>
+  </div>
+  </div>`
+}
+
+function tipTextMap(data, month, year) {
   var months = document.getElementById('month').children
   var values = data
 
@@ -191,10 +212,11 @@ function mouseoverLine(data, index) {
     d1 = i < data.length ? data[i] : data[i - 1]
 
   var d = (x0 + margin.left) - xScale2(d0.monthyear.split('/')[0]) + xScaleMonth2(d0.monthyear.split('/')[1]) > xScale2(d1.monthyear.split('/')[0]) + xScaleMonth2(d1.monthyear.split('/')[1]) - (x0 + margin.left) ? d1 : d0;
+  var html = tipTextLine2(d)
 
-  d3.selectAll(`#chart-${index} .dot`)
-    .attr('r', 1)
-    .lower()
+  // d3.selectAll(`#chart-${index} .dot`)
+  //   .attr('r', 1)
+  //   .lower()
 
   d3.selectAll(`#chart-${index} .dot.yr-${d.monthyear.replaceAll('/','')}`)
     .attr('r', 8)

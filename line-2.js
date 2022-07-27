@@ -8,12 +8,15 @@ var tooltip2 = d3.select("#chart-2")
   .append('div')
   .style('visibility', 'hidden')
   .attr('class', 'my-tooltip')
-  .attr('id', 'tooltip-1')
+  .attr('id', 'tooltip-2')
 
 var borosG2 = svg2.append('g')
   .attr('class', 'boros')
+  .raise()
 var citywideG2 = svg2.append('g')
   .attr('class', 'citywide')
+  .raise()
+
 
 // Add X scale
 var xScale2 = d3.scaleLinear()
@@ -42,7 +45,7 @@ var yAxis2 = d3.axisLeft(yScale2)
 var yGrid2 = d3.axisLeft(yScale2)
   .tickSize(-width + margin.right + margin.left, 0, 0)
   .tickFormat("")
-  .ticks(30)
+  .ticks(12)
 
 // Add Y scale
 var yScale2Citywide = d3.scaleLinear()
@@ -52,12 +55,12 @@ var yScale2Citywide = d3.scaleLinear()
 // Define Y axis and format tick marks
 var yAxis2Citywide = d3.axisLeft(yScale2Citywide)
   .ticks(6)
-  .tickFormat(d => d)
+  .tickFormat(d => numeral(d).format('0,0'))
 
 var yGrid2Citywide = d3.axisLeft(yScale2Citywide)
   .tickSize(-width + margin.right + margin.left, 0, 0)
   .tickFormat("")
-  .ticks(30)
+  .ticks(15)
 
 // Render Y grid
 borosG2.append("g")
@@ -99,13 +102,6 @@ citywideG2.append("g")
   .attr("transform", "translate(-15,0)")
   .style("text-anchor", "middle")
 
-// Render lines g
-var boroLinesG2 = borosG2.append("g")
-  .attr('class', 'lines')
-
-var citywideLinesG2 = citywideG2.append("g")
-  .attr('class', 'lines')
-
 //Render X axis
 svg2.append("g")
   .attr("transform", `translate(0,${height-margin.bottom})`)
@@ -114,7 +110,39 @@ svg2.append("g")
   .call(xAxis2)
   .selectAll(".tick text")
   .style('font-size', '10pt')
-  .raise()
+  .lower()
+
+// Render lines g
+var boroLinesG2 = borosG2.append("g")
+  .attr('class', 'lines')
+
+var citywideLinesG2 = citywideG2.append("g")
+  .attr('class', 'lines')
+
+svg2.append('rect')
+  .attr('x', xScale2(2017))
+  .attr('y', margin.top)
+  .attr('width', xScale2(2018) - xScale2(2017))
+  .attr('height', height - margin.top - margin.bottom)
+  .attr('fill', 'white')
+  .lower();
+
+svg2.append('rect')
+  .attr('x', xScale2(2019))
+  .attr('y', margin.top)
+  .attr('width', xScale2(2018) - xScale2(2017))
+  .attr('height', height - margin.top - margin.bottom)
+  .attr('fill', 'white')
+  .lower();
+
+svg2.append('rect')
+  .attr('x', xScale2(2021))
+  .attr('y', margin.top)
+  .attr('width', xScale2(2018) - xScale2(2017))
+  .attr('height', height - margin.top - margin.bottom)
+  .attr('fill', 'white')
+  .lower();
+
 
 d3.csv("line2-data.csv")
   .then(function(csv) {
@@ -327,14 +355,17 @@ d3.csv("line2-data.csv")
         return mouseout(2)
       });
 
-    svg2.selectAll('.line')
-      .raise()
+    // svg2.selectAll('.line')
+    //   .raise()
 
     svg2.selectAll('.dot')
       .lower()
 
     d3.selectAll('.hover-overlay')
       .raise()
+
+    borosG2.raise()
+    citywideG2.raise()
 
     d3.select('#chart-2 fieldset')
       .on('change', () => {

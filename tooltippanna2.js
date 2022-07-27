@@ -65,7 +65,7 @@ function tooltipChart(dataArray) {
 
   var xScaleMini2 = d3.scaleLinear()
     .range([miniMargin, miniW - miniMargin])
-    .domain([2017, 2022.5])
+    .domain([2017, 2022 + (5 / 12)])
 
   var yScaleMini = d3.scaleLinear()
     .domain([max, 0])
@@ -180,40 +180,25 @@ function tooltipChart(dataArray) {
 }
 
 var bisectDate = d3.bisector(function(d) {
-  return xScale(`${d.year} Q${d.month}`) - margin.left;
-}).left
-
-var bisectType = d3.bisector(function(d) {
-  return yScale(d.arrest) - (margin.bottom + margin.top);
+  return xScale2(d.monthyear.split('/')[0]) + xScaleMonth2(d.monthyear.split('/')[1]) - margin.left;
 }).left
 
 function mouseoverLine(data, index) {
   var x0 = d3.mouse(event.target)[0],
-    y0 = d3.mouse(event.target)[1],
-    i = bisectDate(data, x0, 1),
-    j = bisectType(data, y0, 1)
+    i = bisectDate(data, x0, 1)
 
   var d0 = data[i - 1] !== 'dummy' ? data[i - 1] : data[i],
     d1 = i < data.length ? data[i] : data[i - 1]
 
-  var d = (x0 + margin.left) - xScale(`${d0.year} Q${d0.month}`) > xScale(`${d1.year} Q${d1.month}`) - (x0 + margin.left) ? d1 : d0;
+  var d = (x0 + margin.left) - xScale2(d0.monthyear.split('/')[0]) + xScaleMonth2(d0.monthyear.split('/')[1]) > xScale2(d1.monthyear.split('/')[0]) + xScaleMonth2(d1.monthyear.split('/')[1]) - (x0 + margin.left) ? d1 : d0;
 
-  var linePoints = {
-    'arrest': yScale(d.arrest)
-  }
-  var lineKeys = Object.keys(linePoints)
-  var closestKey = Math.abs(y0 - linePoints[lineKeys[0]]) < Math.abs(y0 - linePoints[lineKeys[1]]) ? lineKeys[0] : lineKeys[1]
+  d3.selectAll(`#chart-${index} .dot`)
+    .attr('r', 1)
+    .lower()
 
-  var html = tipTextMap(d, closestKey)
-
-  d3.selectAll('.dot')
-    .attr('r', 3)
-
-  d3.selectAll(`.${closestKey}`)
-    .raise()
-
-  d3.selectAll(`.dot.${closestKey}.yr-${d.year}-q${d.month}`)
+  d3.selectAll(`#chart-${index} .dot.yr-${d.monthyear.replaceAll('/','')}`)
     .attr('r', 8)
+    .raise()
 
   d3.select(`#tooltip-${index}`)
     .html(html)
@@ -247,15 +232,16 @@ function mouseover(i, tipText) {
 
   d3.select(`#tooltip-${i} .quit`)
     .on('click', () => {
-      svg1.selectAll(`path`)
-        .style('stroke-width', 0.5)
-
-      d3.select(`#tooltip-${i}`)
-        .html("")
-        .attr('display', 'none')
-        .style("visibility", "hidden")
-        .style("left", null)
-        .style("top", null);
+      $("select.zipname").selectize()[0].selectize.setValue('')
+      // svg1.selectAll(`path`)
+      //   .style('stroke-width', 0.5)
+      //
+      // d3.select(`#tooltip-${i}`)
+      //   .html("")
+      //   .attr('display', 'none')
+      //   .style("visibility", "hidden")
+      //   .style("left", null)
+      //   .style("top", null);
     })
 }
 
@@ -273,8 +259,9 @@ function mouseout(i) {
     d3.select(event.target)
       .style('stroke-width', 0.5)
 
-    d3.selectAll('.dot')
-      .attr("r", 3)
+    d3.selectAll(`#chart-${i} .dot`)
+      .attr("r", 1)
+      .lower()
 
     d3.select(`#tooltip-${i}`)
       .html("")

@@ -6,6 +6,24 @@ var margin = {
   left: 40
 }
 
+function radio(i) {
+  var borosG = i == 2 ? borosG2 : borosG2
+  var citywideG = i == 2 ? citywideG2 : citywideG2
+  var key = i == 2 ? 'eviction' : 'eviction'
+  var value = document.querySelector(`#chart-${i} input[name="${key}"]:checked`).value
+
+
+  if (value === 'citywide') {
+    borosG.style('display', 'none')
+    citywideG.style('display', 'block')
+    d3.select(`#chart-${i} .legend`).style('display', 'none')
+  } else {
+    citywideG.style('display', 'none')
+    borosG.style('display', 'block')
+    d3.select(`#chart-${i} .legend`).style('display', 'block')
+  }
+}
+
 var winWidth = document.getElementById('article-body').offsetWidth
 var rawWidth = document.getElementById('chart-1').offsetWidth
 var width = rawWidth;

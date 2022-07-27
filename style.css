@@ -88,13 +88,23 @@ svg {
 
 .legend {
   list-style: none;
-  width: 100%;
+  width: 80%;
   margin: 0;
   line-height: 1.5em;
+  display: block;
+  float: right;
+}
+
+.legend-box fieldset {
+  width: 20%;
+  display: block;
+  float: left;
+  margin: 0;
 }
 
 .legend li {
   margin: 0 5px;
+  display: inline-block;
 }
 
 .legend-entry {
@@ -106,41 +116,33 @@ svg {
 
 .legend-sq {
   display: inline-block;
-  border: 1px solid #fff !important;
+  border: 1px solid black !important;
   width: 12pt !important;
   height: 12pt !important;
 }
 
-.arrest-legend .legend-sq {
-  background-color: #B01116;
+.citywide .legend-sq {
+  background-color: #132a43;
 }
 
-.summons-legend .legend-sq {
-  background-color: #F7F9F7;
-}
-
-.unknown-legend .legend-sq {
-  background-color: #707C9C;
-}
-
-.amerindian-legend .legend-sq {
+.bronx .legend-sq {
   background-color: #6BA292;
 }
 
-.aapi-legend .legend-sq {
-  background-color: #0072DC;
+.brooklyn .legend-sq {
+  background-color: #ed6a5a;
 }
 
-.black-legend .legend-sq {
-  background-color: #27A027;
-}
-
-.hispanic-legend .legend-sq {
-  background-color: #D5563A;
-}
-
-.white-legend .legend-sq {
+.manhattan .legend-sq {
   background-color: #F9C80E;
+}
+
+.queens .legend-sq {
+  background-color: #654f6f;
+}
+
+.staten .legend-sq {
+  background-color: #56a9de;
 }
 
 .my-tooltip {
@@ -290,7 +292,7 @@ svg {
   }
 }
 
-@media screen and (max-width: 400px) {
+@media screen and (max-width: 410px) {
   #chart-1 .chart svg {
     margin-top: 50px;
   }

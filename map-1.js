@@ -22,7 +22,7 @@ var tooltip1 = d3.select("#chart-1")
 
 var arrestSubset
 var arrestScale
-var selectedPrecinct = '1'
+var totalScale
 
 function dynamicSelect(year, month) {
   document.querySelectorAll('option').forEach(d => d.style.display = 'block')
@@ -72,15 +72,15 @@ function changeZip(d) {
 //Load in GeoJSON data
 d3.json("zcta-refined-nodupes.json")
   .then(function(json) {
-    var radio = 'arrest'
+    var radioVal = mapRadio()
 
     var year = document.getElementById('year').value
     dynamicSelect(year, document.getElementById('month').value)
     var month = document.getElementById('month').value
 
-
+    var lastKey = radioVal === 'total' ? radioVal : year + month
     arrestSubset = json.features.map((d) => {
-      return d['properties']['arrest'][year + month]
+      return d['properties']['arrest'][lastKey]
     })
 
     var selectSubset = arrestSubset
@@ -91,9 +91,13 @@ d3.json("zcta-refined-nodupes.json")
 
     arrestScale = d3.scaleLinear()
       .range(['#D7D9D7', '#B01116'])
-      .domain([0, 27])
+      .domain([0, 12.5])
 
-    var selectScale = arrestScale
+    totalScale = d3.scaleLinear()
+      .range(['#D7D9D7', '#B01116'])
+      .domain([0, 786.25])
+
+    var selectScale = radioVal === 'total' ? totalScale : arrestScale
 
     var legendHome = window.innerWidth > 767 ? '.form-select' : '.mobile-legend'
     var key = d3.select(legendHome)
@@ -117,7 +121,7 @@ d3.json("zcta-refined-nodupes.json")
 
     legend.append("stop")
       .attr("offset", "100%")
-      .attr('stop-color', arrestScale(d3.max(selectSubset)))
+      .attr('stop-color', selectScale(d3.max(selectSubset)))
       // .attr("stop-color", "#B01116")
       .attr("stop-opacity", 1);
 
@@ -146,17 +150,21 @@ d3.json("zcta-refined-nodupes.json")
     //Bind data and create one path per GeoJSON feature
 
     json.features.forEach((d) => {
-      if (d.properties.modzcta == '99999') {
+      if (d.properties.ZIPCODE == '00083') {
         return null
       }
+      // console.log(d.properties.ZIPCODE)
+      // if (d.properties.ZIPCODE == '10162') {
+      //   debugger
+      // }
 
       var option = document.createElement("option")
-      option.text = `${d.properties.modzcta} (${d.properties.hood.split(': ')[1]})`
-      option.value = 'zip-' + d.properties.modzcta
+      option.text = `${d.properties.ZIPCODE} (${d.properties.hood.split(': ')[1]})`
+      option.value = 'zip-' + d.properties.ZIPCODE
 
       option.setAttribute('boro', d.properties.hood.split(': ')[0])
       option.setAttribute('data-data', `{
-        "zipCode": "${d.properties.modzcta}",
+        "zipCode": "${d.properties.ZIPCODE}",
         "boro": "${d.properties.hood.split(': ')[0].replaceAll('The Bronx, Manhattan', 'The Bronx')}",
         "hood": "${d.properties.hood.split(': ')[1]}"
       }`)
@@ -172,17 +180,25 @@ d3.json("zcta-refined-nodupes.json")
       .enter()
       .append("path")
       .attr("d", path)
-      .attr('class', d => `zcta zip-${d.properties.modzcta}`)
+      .attr('class', d => `zcta zip-${d.properties.ZIPCODE}`)
       .style("stroke", '#000')
       .style("stroke-width", '.5')
-      .style('pointer-events', d => d.properties.modzcta == 99999 ? 'none' : 'auto')
+      .style('pointer-events', d => d.properties.ZIPCODE == 00083 ? 'none' : 'auto')
       .attr('data-data', (d) => {
         return JSON.stringify(d.properties)
       })
       .style("fill", (d) => {
-        return selectScale(d['properties'][radio][year + month])
+        var radioVal = mapRadio()
+
+        var year = document.getElementById('year').value
+        dynamicSelect(year, document.getElementById('month').value)
+        var month = document.getElementById('month').value
+
+        var lastKey = radioVal === 'total' ? radioVal : year + month
+
+        return selectScale(d['properties']['arrest'][lastKey])
       })
-      .style('opacity', d => d.properties.modzcta == 99999 ? '0' : '1')
+      .style('opacity', d => d.properties.ZIPCODE == 00083 ? '0' : '1')
       .on("mouseover mousemove", (d) => {
         $("select.zipname").selectize()[0].selectize.setValue(event.target.classList[1])
       })
@@ -192,43 +208,61 @@ d3.json("zcta-refined-nodupes.json")
         }
       })
 
+    var zips = []
+
+    var islandDupeData = json.features.map((p) => {
+      if (!zips.includes(p['properties']['ZIPCODE'])) {
+        zips.push(p['properties']['ZIPCODE'])
+        return p
+      }
+    }).filter(i => !!i)
+
     var citywideMonthTotal = d3.select(legendHome)
       .append("span")
       .style('width', '100%')
       .style('display', 'block')
-      .datum(json.features)
+      .style('pointer-events', 'none')
+      .datum(islandDupeData)
       .text((d) => {
+        var radioVal = mapRadio()
+
+        var year = document.getElementById('year').value
+        dynamicSelect(year, document.getElementById('month').value)
+        var month = document.getElementById('month').value
+
+        var lastKey = radioVal === 'total' ? radioVal : year + month
+
         var counts = d.map((a) => {
-          return a['properties'][radio][year + month]
+          return a['properties']['arrest'][lastKey]
         })
+
         var total = counts.reduce((a, b) => {
           return a + b
         })
+
         return `${numeral(total).format('0,0')} evictions citywide`
       })
       .attr("transform", "translate(0,15)")
       .attr('text-anchor', 'start')
 
     d3.selectAll('.form-select')
-      .datum(json.features)
+      .datum(islandDupeData)
       .on('change', function(data) {
 
+        //Prevents doublecounting of islands
 
-
-        let d = data.find((p) => {
-          return p.properties.precinct === selectedPrecinct
-        })
-
-        var radio = 'arrest'
+        var radioVal = mapRadio()
 
         var year = document.getElementById('year').value
         dynamicSelect(year, document.getElementById('month').value)
         var month = document.getElementById('month').value
 
+        var lastKey = radioVal === 'total' ? radioVal : year + month
+
         citywideMonthTotal
           .text((d) => {
             var counts = d.map((a) => {
-              return a['properties'][radio][year + month]
+              return a['properties']['arrest'][lastKey]
             })
             var total = counts.reduce((a, b) => {
               return a + b
@@ -237,16 +271,12 @@ d3.json("zcta-refined-nodupes.json")
           })
 
         arrestSubset = json.features.map((d) => {
-          return d['properties']['arrest'][year + month]
+          return d['properties']['arrest'][lastKey]
         })
 
         var selectSubset = arrestSubset
 
-        arrestScale = d3.scaleLinear()
-          .range(['#D7D9D7', '#B01116'])
-          .domain([0, 27])
-
-        var selectScale = arrestScale
+        var selectScale = radioVal === 'total' ? totalScale : arrestScale
 
         d3.select('.gradient-min')
           .text(0)
@@ -255,25 +285,32 @@ d3.json("zcta-refined-nodupes.json")
           .text(d3.max(selectSubset))
 
         d3.select(document.querySelector('#gradient').lastChild)
-          .attr('stop-color', arrestScale(d3.max(selectSubset)))
+          .attr('stop-color', selectScale(d3.max(selectSubset)))
         //
         // d3.selectAll(`#chart-1 path.precinct`)
         //   .transition()
         //   .duration(350)
         //   .style("fill", (d) => {
-        //     return selectScale(d['properties'][radio][year + month])
+        //     return selectScale(d['properties'][radio][lastKey])
         //   })
 
         d3.selectAll(`#chart-1 path.zcta`)
           .transition()
           .duration(350)
           .style("fill", (d) => {
-            return selectScale(d['properties'][radio][year + month])
+            var radioVal = mapRadio()
+
+            var year = document.getElementById('year').value
+            dynamicSelect(year, document.getElementById('month').value)
+            var month = document.getElementById('month').value
+
+            var lastKey = radioVal === 'total' ? radioVal : year + month
+            return selectScale(d['properties']['arrest'][lastKey])
           })
 
         if (document.querySelector('#chart-1 .my-tooltip').style.visibility !== 'hidden') {
           var zipcode = document.querySelector('.selectize-input .item').dataset.value.split('-')[1]
-          var selectedD = data.find(d => d.properties.modzcta == zipcode)
+          var selectedD = data.find(d => d.properties.ZIPCODE == zipcode)
           mouseover(1, tipTextMap(selectedD.properties, month, year))
           tooltipChart(ttChartData(selectedD.properties, 'left'), 'left')
         }
@@ -287,6 +324,7 @@ d3.json("zcta-refined-nodupes.json")
     return json.features
   })
   .then(function(json) {
+    mapRadio()
     document.querySelector('select.zipname').selectedIndex = -1
     var $select = $("select.zipname").selectize({
       placeholder: 'Select a zip...',

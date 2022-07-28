@@ -4,7 +4,7 @@ var svg3 = d3.select("#chart-3 .chart")
   .attr("width", width)
   .attr("height", height);
 
-var tooltip2 = d3.select("#chart-3")
+var tooltip3 = d3.select("#chart-3")
   .append('div')
   .style('visibility', 'hidden')
   .attr('class', 'my-tooltip')
@@ -40,7 +40,7 @@ var yScale3 = d3.scaleLinear()
 // Define Y axis and format tick marks
 var yAxis3 = d3.axisLeft(yScale3)
   .ticks(6)
-  .tickFormat(d => d)
+  .tickFormat(d => numeral(d).format('0,0'))
 
 var yGrid3 = d3.axisLeft(yScale3)
   .tickSize(-width + margin.right + margin.left, 0, 0)

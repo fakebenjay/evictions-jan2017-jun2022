@@ -3,13 +3,26 @@ var margin = {
   top: 10,
   right: 10,
   bottom: 25,
-  left: 40
+  left: 55
+}
+
+function mapRadio() {
+  var radioVal = document.querySelector(`#chart-1 input[name="timeframe"]:checked`).value
+
+  if (radioVal === 'total') {
+    d3.selectAll('#chart-1 .select-monthyear')
+      .style('display', 'none')
+  } else {
+    d3.selectAll('#chart-1 .select-monthyear')
+      .style('display', 'inline')
+  }
+  return radioVal
 }
 
 function radio(i) {
-  var borosG = i == 2 ? borosG2 : borosG3
-  var citywideG = i == 2 ? citywideG2 : citywideG3
-  var key = i == 2 ? 'eviction' : 'filing'
+  var borosG = i == 2 ? borosG2 : i == 3 ? borosG3 : borosG4
+  var citywideG = i == 2 ? citywideG2 : i == 3 ? citywideG3 : citywideG4
+  var key = i == 2 ? 'eviction' : i == 3 ? 'filing' : 'warrant'
   var value = document.querySelector(`#chart-${i} input[name="${key}"]:checked`).value
 
   if (value === 'citywide') {

@@ -17,7 +17,6 @@ var citywideG2 = svg2.append('g')
   .attr('class', 'citywide')
   .raise()
 
-
 // Add X scale
 var xScale2 = d3.scaleLinear()
   .range([margin.left, width - margin.right])

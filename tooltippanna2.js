@@ -43,11 +43,11 @@ function tipTextLine3(data) {
   var month = data.monthyear.split('/')[1]
   var values = data
 
-  var manhattanLine = `<p style="font-size:12pt;width:100%;float:none;"><span style="background-color:#F9C80E;color:black;">&nbsp;Manhattan&nbsp;</span> <strong>${values.manhattan}</strong>${values.citywide > 0 ? ` <small>(${numeral(values.manhattan/values.citywide).format('0%')} of total)</small>` : ''}</p>`
-  var bronxLine = `<p style="font-size:12pt;width:100%;float:none;"><span style="background-color:#6ba292;color:white;">&nbsp;The Bronx&nbsp;</span> <strong>${values.bronx}</strong>${values.citywide > 0 ? ` <small>(${numeral(values.bronx/values.citywide).format('0%')} of total)</small>` : ''}</p>`
-  var brooklynLine = `<p style="font-size:12pt;width:100%;float:none;"><span style="background-color:#ed6a5a;color:black;">&nbsp;Brooklyn&nbsp;</span> <strong>${values.brooklyn}</strong>${values.citywide > 0 ? ` <small>(${numeral(values.brooklyn/values.citywide).format('0%')} of total)</small>` : ''}</p>`
-  var queensLine = `<p style="font-size:12pt;width:100%;float:none;"><span style="background-color:#654f6f;color:white;">&nbsp;Queens&nbsp;</span> <strong>${values.queens}</strong>${values.citywide > 0 ? ` <small>(${numeral(values.queens/values.citywide).format('0%')} of total)</small>` : ''}</p>`
-  var statenLine = `<p style="font-size:12pt;width:100%;float:none;"><span style="background-color:#56A9DE;color:black;">&nbsp;Staten Island&nbsp;</span> <strong>${values.staten}</strong>${values.citywide > 0 ? ` <small>(${numeral(values.staten/values.citywide).format('0%')} of total)</small>` : ''}</p>`
+  var manhattanLine = `<p style="font-size:12pt;width:100%;float:none;"><span style="background-color:#F9C80E;color:black;">&nbsp;Manhattan&nbsp;</span> <strong>${numeral(values.manhattan).format('0,0')}</strong>${values.citywide > 0 ? ` <small>(${numeral(values.manhattan/values.citywide).format('0%')} of total)</small>` : ''}</p>`
+  var bronxLine = `<p style="font-size:12pt;width:100%;float:none;"><span style="background-color:#6ba292;color:white;">&nbsp;The Bronx&nbsp;</span> <strong>${numeral(values.bronx).format('0,0')}</strong>${values.citywide > 0 ? ` <small>(${numeral(values.bronx/values.citywide).format('0%')} of total)</small>` : ''}</p>`
+  var brooklynLine = `<p style="font-size:12pt;width:100%;float:none;"><span style="background-color:#ed6a5a;color:black;">&nbsp;Brooklyn&nbsp;</span> <strong>${numeral(values.brooklyn).format('0,0')}</strong>${values.citywide > 0 ? ` <small>(${numeral(values.brooklyn/values.citywide).format('0%')} of total)</small>` : ''}</p>`
+  var queensLine = `<p style="font-size:12pt;width:100%;float:none;"><span style="background-color:#654f6f;color:white;">&nbsp;Queens&nbsp;</span> <strong>${numeral(values.queens).format('0,0')}</strong>${values.citywide > 0 ? ` <small>(${numeral(values.queens/values.citywide).format('0%')} of total)</small>` : ''}</p>`
+  var statenLine = `<p style="font-size:12pt;width:100%;float:none;"><span style="background-color:#56A9DE;color:black;">&nbsp;Staten Island&nbsp;</span> <strong>${numeral(values.staten).format('0,0')}</strong>${values.citywide > 0 ? ` <small>(${numeral(values.staten/values.citywide).format('0%')} of total)</small>` : ''}</p>`
 
   var lines = [manhattanLine, bronxLine, brooklynLine, queensLine, statenLine]
   lines.sort((b, a) => {
@@ -58,7 +58,37 @@ function tipTextLine3(data) {
   return `<span class='quit'>x</span>
   <div class="tooltip-container">
   <div class="tooltip-top">
-  <h2>Evictions Filed</h2>
+  <h2>Eviction Filings</h2>
+  <strong style="font-size:12pt;">for ${months[month-1].innerText} ${year}</strong>
+  <br/><br/>
+  <p style="font-size:14pt;width:100%;float:none;"><span style="background-color:#142a43;color:white;">&nbsp;Citywide&nbsp;</span> <strong>${numeral(values.citywide).format('0,0')}</strong></p><br/>
+${lines.join('')}
+  </div>
+  </div>`
+}
+
+function tipTextLine4(data) {
+  var months = document.getElementById('month').children
+  var year = data.monthyear.split('/')[0]
+  var month = data.monthyear.split('/')[1]
+  var values = data
+
+  var manhattanLine = `<p style="font-size:12pt;width:100%;float:none;"><span style="background-color:#F9C80E;color:black;">&nbsp;Manhattan&nbsp;</span> <strong>${numeral(values.manhattan).format('0,0')}</strong>${values.citywide > 0 ? ` <small>(${numeral(values.manhattan/values.citywide).format('0%')} of total)</small>` : ''}</p>`
+  var bronxLine = `<p style="font-size:12pt;width:100%;float:none;"><span style="background-color:#6ba292;color:white;">&nbsp;The Bronx&nbsp;</span> <strong>${numeral(values.bronx).format('0,0')}</strong>${values.citywide > 0 ? ` <small>(${numeral(values.bronx/values.citywide).format('0%')} of total)</small>` : ''}</p>`
+  var brooklynLine = `<p style="font-size:12pt;width:100%;float:none;"><span style="background-color:#ed6a5a;color:black;">&nbsp;Brooklyn&nbsp;</span> <strong>${numeral(values.brooklyn).format('0,0')}</strong>${values.citywide > 0 ? ` <small>(${numeral(values.brooklyn/values.citywide).format('0%')} of total)</small>` : ''}</p>`
+  var queensLine = `<p style="font-size:12pt;width:100%;float:none;"><span style="background-color:#654f6f;color:white;">&nbsp;Queens&nbsp;</span> <strong>${numeral(values.queens).format('0,0')}</strong>${values.citywide > 0 ? ` <small>(${numeral(values.queens/values.citywide).format('0%')} of total)</small>` : ''}</p>`
+  var statenLine = `<p style="font-size:12pt;width:100%;float:none;"><span style="background-color:#56A9DE;color:black;">&nbsp;Staten Island&nbsp;</span> <strong>${numeral(values.staten).format('0,0')}</strong>${values.citywide > 0 ? ` <small>(${numeral(values.staten/values.citywide).format('0%')} of total)</small>` : ''}</p>`
+
+  var lines = [manhattanLine, bronxLine, brooklynLine, queensLine, statenLine]
+  lines.sort((b, a) => {
+    return parseInt(values[a.split('&nbsp;')[1].toLowerCase().replaceAll('the ', '').replaceAll(' island', '')]) - parseInt(values[b.split('&nbsp;')[1].toLowerCase().replaceAll('the ', '').replaceAll(' island', '')])
+  })
+
+
+  return `<span class='quit'>x</span>
+  <div class="tooltip-container">
+  <div class="tooltip-top">
+  <h2>Eviction Warrants</h2>
   <strong style="font-size:12pt;">for ${months[month-1].innerText} ${year}</strong>
   <br/><br/>
   <p style="font-size:14pt;width:100%;float:none;"><span style="background-color:#142a43;color:white;">&nbsp;Citywide&nbsp;</span> <strong>${numeral(values.citywide).format('0,0')}</strong></p><br/>
@@ -75,19 +105,17 @@ function tipTextMap(data, month, year) {
     return a + b
   }) / arrestSubset.length
 
-  var zipTotal = Object.keys(values.arrest).map(k => values.arrest[k]).reduce((a, b) => a + b)
-
   return `<span class='quit'>x</span>
   <div class="tooltip-container">
   <div class="tooltip-top">
-  <h2>${values.modzcta}</h2>
+  <h2>${values.ZIPCODE}</h2>
   <p style="line-height:normal;">${values.hood}</p>
   <strong style="font-size:12pt;">for ${months[month-1].innerText} ${year}</strong>
   <br/><br/>
   <p style="font-size:13pt;width:100%;float:none;">Evictions: <strong style="color:${values['arrest'][year+month] > 12 ? 'white':'black'};background-color:${arrestScale(values['arrest'][year+month])};">&nbsp;${values['arrest'][year+month]}&nbsp;</strong>
   <br/>
   <p style="font-size:9pt;"><strong>${numeral(values['arrest'][year+month]/arrestAvg).format('0,0%')}</strong> of this month's average</p>
-  <p style="font-size:9pt;"><strong>${numeral(zipTotal).format('0,0')}</strong> evictions here, from January 2017 to June 2022</p>
+  <p style="font-size:9pt;"><strong>${numeral(values['arrest']['total']).format('0,0')}</strong> evictions here, from January 2017 to June 2022</p>
   </p>
   </div>
   <div class="tooltip-bottom">
@@ -251,9 +279,9 @@ var bisectDate = d3.bisector(function(d) {
 function mouseoverLine(data, index) {
   var x0 = d3.mouse(event.target)[0],
     i = bisectDate(data, x0, 1),
-    xScaleYear = index == 2 ? xScale2 : xScale3,
-    xScaleMonth = index == 2 ? xScaleMonth2 : xScaleMonth3,
-    tipText = index == 2 ? tipTextLine2 : tipTextLine3
+    xScaleYear = index == 2 ? xScale2 : index == 3 ? xScale3 : xScale4,
+    xScaleMonth = index == 2 ? xScaleMonth2 : index == 3 ? xScaleMonth3 : xScaleMonth4,
+    tipText = index == 2 ? tipTextLine2 : index == 3 ? tipTextLine3 : tipTextLine4
 
   var d0 = data[i - 1] !== 'dummy' ? data[i - 1] : data[i],
     d1 = i < data.length ? data[i] : data[i - 1]

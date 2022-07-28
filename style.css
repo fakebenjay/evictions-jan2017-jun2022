@@ -219,7 +219,7 @@ svg {
   display: inline-block;
 }
 
-#chart-1 .bottom, #chart-3 .bottom {
+#chart-1 .bottom {
   overflow: auto;
   display: flex;
   align-items: center;
@@ -289,11 +289,6 @@ svg {
 }
 
 @media screen and (min-width: 768px) {
-  #chart-3 {
-    width: 50% !important;
-    float: right;
-  }
-
   .selectize-control {
     width: 300px !important;
   }

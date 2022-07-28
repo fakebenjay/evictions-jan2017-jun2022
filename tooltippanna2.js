@@ -37,6 +37,36 @@ ${lines.join('')}
   </div>`
 }
 
+function tipTextLine3(data) {
+  var months = document.getElementById('month').children
+  var year = data.monthyear.split('/')[0]
+  var month = data.monthyear.split('/')[1]
+  var values = data
+
+  var manhattanLine = `<p style="font-size:12pt;width:100%;float:none;"><span style="background-color:#F9C80E;color:black;">&nbsp;Manhattan&nbsp;</span> <strong>${values.manhattan}</strong>${values.citywide > 0 ? ` <small>(${numeral(values.manhattan/values.citywide).format('0%')} of total)</small>` : ''}</p>`
+  var bronxLine = `<p style="font-size:12pt;width:100%;float:none;"><span style="background-color:#6ba292;color:white;">&nbsp;The Bronx&nbsp;</span> <strong>${values.bronx}</strong>${values.citywide > 0 ? ` <small>(${numeral(values.bronx/values.citywide).format('0%')} of total)</small>` : ''}</p>`
+  var brooklynLine = `<p style="font-size:12pt;width:100%;float:none;"><span style="background-color:#ed6a5a;color:black;">&nbsp;Brooklyn&nbsp;</span> <strong>${values.brooklyn}</strong>${values.citywide > 0 ? ` <small>(${numeral(values.brooklyn/values.citywide).format('0%')} of total)</small>` : ''}</p>`
+  var queensLine = `<p style="font-size:12pt;width:100%;float:none;"><span style="background-color:#654f6f;color:white;">&nbsp;Queens&nbsp;</span> <strong>${values.queens}</strong>${values.citywide > 0 ? ` <small>(${numeral(values.queens/values.citywide).format('0%')} of total)</small>` : ''}</p>`
+  var statenLine = `<p style="font-size:12pt;width:100%;float:none;"><span style="background-color:#56A9DE;color:black;">&nbsp;Staten Island&nbsp;</span> <strong>${values.staten}</strong>${values.citywide > 0 ? ` <small>(${numeral(values.staten/values.citywide).format('0%')} of total)</small>` : ''}</p>`
+
+  var lines = [manhattanLine, bronxLine, brooklynLine, queensLine, statenLine]
+  lines.sort((b, a) => {
+    return parseInt(values[a.split('&nbsp;')[1].toLowerCase().replaceAll('the ', '').replaceAll(' island', '')]) - parseInt(values[b.split('&nbsp;')[1].toLowerCase().replaceAll('the ', '').replaceAll(' island', '')])
+  })
+
+
+  return `<span class='quit'>x</span>
+  <div class="tooltip-container">
+  <div class="tooltip-top">
+  <h2>Evictions Filed</h2>
+  <strong style="font-size:12pt;">for ${months[month-1].innerText} ${year}</strong>
+  <br/><br/>
+  <p style="font-size:14pt;width:100%;float:none;"><span style="background-color:#142a43;color:white;">&nbsp;Citywide&nbsp;</span> <strong>${numeral(values.citywide).format('0,0')}</strong></p><br/>
+${lines.join('')}
+  </div>
+  </div>`
+}
+
 function tipTextMap(data, month, year) {
   var months = document.getElementById('month').children
   var values = data
@@ -220,13 +250,16 @@ var bisectDate = d3.bisector(function(d) {
 
 function mouseoverLine(data, index) {
   var x0 = d3.mouse(event.target)[0],
-    i = bisectDate(data, x0, 1)
+    i = bisectDate(data, x0, 1),
+    xScaleYear = index == 2 ? xScale2 : xScale3,
+    xScaleMonth = index == 2 ? xScaleMonth2 : xScaleMonth3,
+    tipText = index == 2 ? tipTextLine2 : tipTextLine3
 
   var d0 = data[i - 1] !== 'dummy' ? data[i - 1] : data[i],
     d1 = i < data.length ? data[i] : data[i - 1]
 
-  var d = (x0 + margin.left) - xScale2(d0.monthyear.split('/')[0]) + xScaleMonth2(d0.monthyear.split('/')[1]) > xScale2(d1.monthyear.split('/')[0]) + xScaleMonth2(d1.monthyear.split('/')[1]) - (x0 + margin.left) ? d1 : d0;
-  var html = tipTextLine2(d)
+  var d = (x0 + margin.left) - xScaleYear(d0.monthyear.split('/')[0]) + xScaleMonth(d0.monthyear.split('/')[1]) > xScaleYear(d1.monthyear.split('/')[0]) + xScaleMonth(d1.monthyear.split('/')[1]) - (x0 + margin.left) ? d1 : d0;
+  var html = tipText(d)
 
   d3.selectAll(`#chart-${index} .dot`)
     .attr('r', 1)
@@ -255,8 +288,8 @@ function mouseoverLine(data, index) {
 
   d3.select(`#tooltip-${index} .quit`)
     .on('click', () => {
-      d3.selectAll('.dot')
-        .attr("r", 3)
+      d3.selectAll(`#chart-${index} .dot`)
+        .attr("r", 1)
 
       d3.select(`#tooltip-${index}`)
         .html("")

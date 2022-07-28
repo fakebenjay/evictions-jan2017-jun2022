@@ -7,11 +7,10 @@ var margin = {
 }
 
 function radio(i) {
-  var borosG = i == 2 ? borosG2 : borosG2
-  var citywideG = i == 2 ? citywideG2 : citywideG2
-  var key = i == 2 ? 'eviction' : 'eviction'
+  var borosG = i == 2 ? borosG2 : borosG3
+  var citywideG = i == 2 ? citywideG2 : citywideG3
+  var key = i == 2 ? 'eviction' : 'filing'
   var value = document.querySelector(`#chart-${i} input[name="${key}"]:checked`).value
-
 
   if (value === 'citywide') {
     borosG.style('display', 'none')

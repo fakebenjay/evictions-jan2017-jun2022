@@ -109,20 +109,20 @@ function tipTextMap(data, month, year) {
   var monthName = radioVal === 'monthly' ? months[month - 1].innerText + " " : ''
   var yearName = radioVal === 'total' ? 'January 2017 to June 2022' : year
 
-  var arrestAvg = arrestSubset.reduce((a, b) => {
-    return a + b
-  }) / arrestSubset.length
+  var totalLine = radioVal === 'total' ? '' : `<p style="font-size:9pt;"><strong>${numeral(values['arrest']['total']).format('0,0')}</strong> ${values['arrest']['total'] == 1 ? 'eviction':'evictions'} here, from January 2017 to June 2022</p>`
+  var yearLine = radioVal !== 'monthly' ? '' : `<p style="font-size:9pt;"><strong>${numeral(values['arrest'][yearName + 'XX']).format('0,0')}</strong> ${values['arrest'][yearName + 'XX'] == 1 ? 'eviction':'evictions'} here, in ${yearName.replaceAll('2022', '2022 (to date)')}</p>`
 
   return `<span class='quit'>x</span>
   <div class="tooltip-container">
   <div class="tooltip-top">
   <h2>${values.ZIPCODE}</h2>
   <p style="line-height:normal;">${values.hood}</p>
-  <strong style="font-size:12pt;">for ${monthName} ${yearName}</strong>
+  <strong style="font-size:12pt;">for ${monthName} ${yearName}${yearName == 2022 && radioVal === 'yearly' ? ' (to date)':''}</strong>
   <br/><br/>
   <p style="font-size:13pt;width:100%;float:none;">Evictions: <strong style="color:${values['arrest'][lastKey] > blackwhite ? 'white':'black'};background-color:${selectScale(values['arrest'][lastKey])};">&nbsp;${numeral(values['arrest'][lastKey]).format('0,0')}&nbsp;</strong>
   <br/>
-  <p style="font-size:9pt;"><strong>${numeral(values['arrest']['total']).format('0,0')}</strong> ${values['arrest']['total'] == 1 ? 'eviction':'evictions'} here, from January 2017 to June 2022</p>
+  ${totalLine}
+  ${yearLine}
   </p>
   </div>
   <div class="tooltip-bottom">
@@ -139,37 +139,46 @@ function ttChartData(data, side) {
       val: data[metric][k]
     }
   })
-  return dataArray.slice(0, dataArray.length - 7)
+  if (mapRadio() === 'yearly') {
+    return dataArray.slice(dataArray.length - 6)
+  } else {
+    return dataArray.slice(0, dataArray.length - 7)
+  }
 }
 
 function tooltipChart(dataArray) {
   var miniW = document.querySelector(`.tt-chart`).offsetWidth
   var miniH = 80
-  var miniMargin = 10
+  var miniYMargin = 10
+  var miniXMargin = 15
   var metric = 'arrest'
   var colorMax = -0.749023438
   var max = 0
+  var domainMax2 = mapRadio() === 'yearly' ? 2022 : 2022 + (5 / 12)
+  var monthsList = ["201701", "201702", "201703", "201704", "201705", "201706", "201707", "201708", "201709", "201710", "201711", "201712", "201801", "201802", "201803", "201804", "201805", "201806", "201807", "201808", "201809", "201810", "201811", "201812", "201901", "201902", "201903", "201904", "201905", "201906", "201907", "201908", "201909", "201910", "201911", "201912", "202001", "202002", "202003", "202004", "202005", "202006", "202007", "202008", "202009", "202010", "202011", "202012", "202101", "202102", "202103", "202104", "202105", "202106", "202107", "202108", "202109", "202110", "202111", "202112", "202201", "202202", "202203", "202204", "202205", "202206"]
+  var domainMax1 = mapRadio() === 'yearly' ? monthsList.slice(0, monthsList.length - 5) : monthsList
 
   for (let i = 0; i < dataArray.length; i++) {
     max = dataArray[i]['val'] > max ? dataArray[i]['val'] : max
   }
 
-  var miniColorScale = d3.scaleLinear()
-    .domain([0, 916.625])
-    .range(['#f6f7f6', '#b01116'])
+  dataArray.forEach(d => d.key = d.key.replace('XX', '01'))
+  // var miniColorScale = d3.scaleLinear()
+  //   .domain([0, 916.625])
+  //   .range(['#f6f7f6', '#b01116'])
   // .clamp(true)
 
   var xScaleMini = d3.scalePoint()
-    .range([miniMargin, miniW - miniMargin])
-    .domain(["201701", "201702", "201703", "201704", "201705", "201706", "201707", "201708", "201709", "201710", "201711", "201712", "201801", "201802", "201803", "201804", "201805", "201806", "201807", "201808", "201809", "201810", "201811", "201812", "201901", "201902", "201903", "201904", "201905", "201906", "201907", "201908", "201909", "201910", "201911", "201912", "202001", "202002", "202003", "202004", "202005", "202006", "202007", "202008", "202009", "202010", "202011", "202012", "202101", "202102", "202103", "202104", "202105", "202106", "202107", "202108", "202109", "202110", "202111", "202112", "202201", "202202", "202203", "202204", "202205", "202206"])
+    .range([miniXMargin, miniW - miniXMargin])
+    .domain(domainMax1)
 
   var xScaleMini2 = d3.scaleLinear()
-    .range([miniMargin, miniW - miniMargin])
-    .domain([2017, 2022 + (5 / 12)])
+    .range([miniXMargin, miniW - miniXMargin])
+    .domain([2017, domainMax2])
 
   var yScaleMini = d3.scaleLinear()
     .domain([max, 0])
-    .range([miniMargin, miniH - miniMargin])
+    .range([miniYMargin, miniH - miniYMargin])
 
   var yAxisMini = d3.axisLeft(yScaleMini)
     .ticks(3)
@@ -200,14 +209,14 @@ function tooltipChart(dataArray) {
     .attr('class', 'minilines')
 
   var yRenderMini = miniG.append("g")
-    .attr("transform", `translate(10,0)`)
+    .attr("transform", `translate(${miniXMargin},0)`)
     .attr('class', 'y-axis')
     .call(yAxisMini)
     .selectAll(".tick")
     .style('color', '#f3f3f3')
     .selectAll("text")
     .style('font-size', '5pt')
-    .attr("transform", `translate(4,0)`)
+    .attr("transform", `translate(2,0)`)
     .style("text-anchor", "middle")
     .style('fill', 'black')
 
@@ -235,48 +244,77 @@ function tooltipChart(dataArray) {
   //   .style("text-anchor", "middle")
   //   .style('fill', 'black')
 
-  miniSVG.selectAll('.minilines')
-    .data([dataArray])
-    .append("path")
-    .attr("class", `line miniline-${metric}`)
-    .attr("d", (d) => {
-      return miniLine(d)
-    })
-    // .style('stroke', (d) => {
-    //   if (d[0].val === 0 && d[d.length - 1].val === 0) {
-    //     return miniColorScale(0)
-    //   } else {
-    //     return miniColorScale((d[d.length - 1].val - d[0].val) / d[0].val)
-    //   }
-    // })
-    .style('stroke', (d) => {
-      // var total = d.map(d => d.val).reduce((n, q) => {
-      //   return n + q
+
+  if (mapRadio() === 'yearly') {
+    var solid = dataArray.slice(0, 5)
+    var dotted = dataArray.slice(4, 6)
+
+    miniSVG.selectAll('.minilines')
+      .data([solid])
+      .append("path")
+      .attr("class", `line miniline-${metric}`)
+      .attr("d", miniLine)
+      .style('stroke', 'black')
+
+    miniSVG.selectAll('.minilines')
+      .data([dotted])
+      .append("path")
+      .attr("class", `line miniline-${metric}`)
+      .attr("d", (d) => {
+        return miniLine(d)
+      })
+      .style('stroke', 'black')
+      .style('stroke-width', 2)
+      .style('stroke-dasharray', '10,6')
+
+  } else {
+    miniSVG.selectAll('.minilines')
+      .data([dataArray])
+      .append("path")
+      .attr("class", `line miniline-${metric}`)
+      .attr("d", (d) => {
+        return miniLine(d)
+      })
+      // .style('stroke', (d) => {
+      //   if (d[0].val === 0 && d[d.length - 1].val === 0) {
+      //     return miniColorScale(0)
+      //   } else {
+      //     return miniColorScale((d[d.length - 1].val - d[0].val) / d[0].val)
+      //   }
       // })
-      // return miniColorScale(total)
-      return 'black'
-    })
+      .style('stroke', (d) => {
+        // var total = d.map(d => d.val).reduce((n, q) => {
+        //   return n + q
+        // })
+        // return miniColorScale(total)
+        return 'black'
+      })
+  }
 
-  var monthDatum = dataArray.filter((d) => {
-    return d.key === year.value + month.value
-  })[0]
 
-  var selectScale = monthScale
+  if (mapRadio() !== 'total') {
+    var monthDatum = dataArray.filter((d) => {
+      var monthVal = mapRadio() === 'yearly' ? '01' : month.value
+      return d.key === year.value + monthVal
+    })[0]
 
-  miniSVG.selectAll(".minilines")
-    .datum(monthDatum)
-    .append("circle")
-    .attr("class", `dot miniline-${metric}`)
-    .attr("cy", function(d) {
-      return miniH - yScaleMini(max - d.val);
-    })
-    .attr("cx", function(d) {
-      return xScaleMini(d.key)
-    })
-    .attr("r", 4)
-    // .style('stroke', '#F7F9F7')
-    .style('stroke', 'black')
-    .style('fill', d => selectScale(d.val))
+    var selectScale = mapRadio() === 'yearly' ? yearScale : monthScale
+
+    miniSVG.selectAll(".minilines")
+      .datum(monthDatum)
+      .append("circle")
+      .attr("class", `dot miniline-${metric}`)
+      .attr("cy", function(d) {
+        return miniH - yScaleMini(max - d.val);
+      })
+      .attr("cx", function(d) {
+        return xScaleMini(d.key)
+      })
+      .attr("r", 6)
+      // .style('stroke', '#F7F9F7')
+      .style('stroke', 'black')
+      .style('fill', d => selectScale(d.val))
+  }
 }
 
 var bisectDate = d3.bisector(function(d) {

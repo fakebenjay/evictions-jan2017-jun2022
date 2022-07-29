@@ -21,7 +21,8 @@ var tooltip1 = d3.select("#chart-1")
   .attr('id', 'tooltip-1')
 
 var arrestSubset
-var arrestScale
+var monthScale
+var yearScale
 var totalScale
 
 const skips = []
@@ -60,7 +61,6 @@ function changeZip(d) {
     d3.selectAll(`#chart-1 path.${d}`)
       .style('stroke-width', 3)
       .raise()
-
     mouseover(1, tipTextMap(JSON.parse(document.querySelector(`path.${d}`).dataset.data), document.querySelector('select#month').value, document.querySelector('select#year').value))
     tooltipChart(ttChartData(JSON.parse(document.querySelector(`path.${d}`).dataset.data)))
   } else {
@@ -78,7 +78,7 @@ d3.json("zcta-refined-nodupes.json")
 
     var year = document.getElementById('year').value
     dynamicSelect(year, document.getElementById('month').value)
-    var month = document.getElementById('month').value
+    var month = radioVal === 'yearly' ? 'XX' : document.getElementById('month').value
 
     var lastKey = radioVal === 'total' ? radioVal : year + month
     arrestSubset = json.features.map((d) => {
@@ -87,19 +87,19 @@ d3.json("zcta-refined-nodupes.json")
 
     var selectSubset = arrestSubset
 
-    // arrestScale = d3.scaleLinear()
-    //   .range(['#D7D9D7', '#B01116'])
-    //   .domain([0, d3.max(arrestSubset)])
-
-    arrestScale = d3.scaleLinear()
+    yearScale = d3.scaleLinear()
       .range(['#D7D9D7', '#B01116'])
-      .domain([0, 19.5])
+      .domain([0, 248.5])
+
+    monthScale = d3.scaleLinear()
+      .range(['#D7D9D7', '#B01116'])
+      .domain([0, 22])
 
     totalScale = d3.scaleLinear()
       .range(['#D7D9D7', '#B01116'])
       .domain([0, 776.875])
 
-    var selectScale = radioVal === 'total' ? totalScale : arrestScale
+    var selectScale = radioVal === 'total' ? totalScale : radioVal === 'yearly' ? yearScale : monthScale
 
     var legendHome = window.innerWidth > 767 ? '.form-select' : '.mobile-legend'
     var key = d3.select(legendHome)
@@ -145,7 +145,7 @@ d3.json("zcta-refined-nodupes.json")
     key.append('text')
       .attr('class', 'gradient-max')
       .style('fill', 'black')
-      .text(d3.max(selectSubset))
+      .text(numeral(d3.max(selectSubset)).format('0,0'))
       .attr("transform", "translate(180,15)")
       .attr('text-anchor', 'start')
 
@@ -195,7 +195,7 @@ d3.json("zcta-refined-nodupes.json")
 
         var year = document.getElementById('year').value
         dynamicSelect(year, document.getElementById('month').value)
-        var month = document.getElementById('month').value
+        var month = radioVal === 'yearly' ? 'XX' : document.getElementById('month').value
 
         var lastKey = radioVal === 'total' ? radioVal : year + month
 
@@ -231,7 +231,7 @@ d3.json("zcta-refined-nodupes.json")
 
         var year = document.getElementById('year').value
         dynamicSelect(year, document.getElementById('month').value)
-        var month = document.getElementById('month').value
+        var month = radioVal === 'yearly' ? 'XX' : document.getElementById('month').value
 
         var lastKey = radioVal === 'total' ? radioVal : year + month
 
@@ -258,7 +258,7 @@ d3.json("zcta-refined-nodupes.json")
 
         var year = document.getElementById('year').value
         dynamicSelect(year, document.getElementById('month').value)
-        var month = document.getElementById('month').value
+        var month = radioVal === 'yearly' ? 'XX' : document.getElementById('month').value
 
         var lastKey = radioVal === 'total' ? radioVal : year + month
 
@@ -279,13 +279,13 @@ d3.json("zcta-refined-nodupes.json")
 
         var selectSubset = arrestSubset
 
-        var selectScale = radioVal === 'total' ? totalScale : arrestScale
+        var selectScale = radioVal === 'total' ? totalScale : radioVal === 'yearly' ? yearScale : monthScale
 
         d3.select('.gradient-min')
           .text(0)
 
         d3.select('.gradient-max')
-          .text(d3.max(selectSubset))
+          .text(numeral(d3.max(selectSubset)).format('0,0'))
 
         d3.select(document.querySelector('#gradient').lastChild)
           .attr('stop-color', selectScale(d3.max(selectSubset)))
@@ -305,7 +305,7 @@ d3.json("zcta-refined-nodupes.json")
 
             var year = document.getElementById('year').value
             dynamicSelect(year, document.getElementById('month').value)
-            var month = document.getElementById('month').value
+            var month = radioVal === 'yearly' ? 'XX' : document.getElementById('month').value
 
             var lastKey = radioVal === 'total' ? radioVal : year + month
             return selectScale(d['properties']['arrest'][lastKey])
@@ -314,6 +314,7 @@ d3.json("zcta-refined-nodupes.json")
         if (document.querySelector('#chart-1 .my-tooltip').style.visibility !== 'hidden') {
           var zipcode = document.querySelector('.selectize-input .item').dataset.value.split('-')[1]
           var selectedD = data.find(d => d.properties.ZIPCODE == zipcode)
+
           mouseover(1, tipTextMap(selectedD.properties, month, year))
           tooltipChart(ttChartData(selectedD.properties, 'left'), 'left')
         }

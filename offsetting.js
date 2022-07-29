@@ -15,6 +15,13 @@ function mapRadio() {
   } else {
     d3.selectAll('#chart-1 .select-monthyear')
       .style('display', 'inline')
+    if (radioVal === 'monthly') {
+      d3.select('#chart-1 .select-monthyear #month')
+        .style('display', 'inline')
+    } else {
+      d3.select('#chart-1 .select-monthyear #month')
+        .style('display', 'none')
+    }
   }
   return radioVal
 }

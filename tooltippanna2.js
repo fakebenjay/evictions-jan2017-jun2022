@@ -101,6 +101,14 @@ function tipTextMap(data, month, year) {
   var months = document.getElementById('month').children
   var values = data
 
+  var radioVal = mapRadio()
+  var month = radioVal === 'yearly' ? 'XX' : month
+  var lastKey = radioVal === 'total' ? radioVal : year + month
+  var selectScale = radioVal === 'total' ? totalScale : radioVal === 'yearly' ? yearScale : monthScale
+  var blackwhite = selectScale.domain()[1] / 2.2
+  var monthName = radioVal === 'monthly' ? months[month - 1].innerText + " " : ''
+  var yearName = radioVal === 'total' ? 'January 2017 to June 2022' : year
+
   var arrestAvg = arrestSubset.reduce((a, b) => {
     return a + b
   }) / arrestSubset.length
@@ -110,11 +118,11 @@ function tipTextMap(data, month, year) {
   <div class="tooltip-top">
   <h2>${values.ZIPCODE}</h2>
   <p style="line-height:normal;">${values.hood}</p>
-  <strong style="font-size:12pt;">for ${months[month-1].innerText} ${year}</strong>
+  <strong style="font-size:12pt;">for ${monthName} ${yearName}</strong>
   <br/><br/>
-  <p style="font-size:13pt;width:100%;float:none;">Evictions: <strong style="color:${values['arrest'][year+month] > 10 ? 'white':'black'};background-color:${arrestScale(values['arrest'][year+month])};">&nbsp;${values['arrest'][year+month]}&nbsp;</strong>
+  <p style="font-size:13pt;width:100%;float:none;">Evictions: <strong style="color:${values['arrest'][lastKey] > blackwhite ? 'white':'black'};background-color:${selectScale(values['arrest'][lastKey])};">&nbsp;${numeral(values['arrest'][lastKey]).format('0,0')}&nbsp;</strong>
   <br/>
-  <p style="font-size:9pt;"><strong>${numeral(values['arrest']['total']).format('0,0')}</strong> evictions here, from January 2017 to June 2022</p>
+  <p style="font-size:9pt;"><strong>${numeral(values['arrest']['total']).format('0,0')}</strong> ${values['arrest']['total'] == 1 ? 'eviction':'evictions'} here, from January 2017 to June 2022</p>
   </p>
   </div>
   <div class="tooltip-bottom">
@@ -131,7 +139,7 @@ function ttChartData(data, side) {
       val: data[metric][k]
     }
   })
-  return dataArray.slice(0, dataArray.length - 1)
+  return dataArray.slice(0, dataArray.length - 7)
 }
 
 function tooltipChart(dataArray) {
@@ -253,7 +261,7 @@ function tooltipChart(dataArray) {
     return d.key === year.value + month.value
   })[0]
 
-  var selectScale = arrestScale
+  var selectScale = monthScale
 
   miniSVG.selectAll(".minilines")
     .datum(monthDatum)

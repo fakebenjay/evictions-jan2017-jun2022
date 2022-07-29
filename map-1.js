@@ -24,6 +24,8 @@ var arrestSubset
 var arrestScale
 var totalScale
 
+const skips = []
+
 function dynamicSelect(year, month) {
   document.querySelectorAll('option').forEach(d => d.style.display = 'block')
   document.querySelectorAll('option').forEach(d => d.disabled = false)
@@ -91,11 +93,11 @@ d3.json("zcta-refined-nodupes.json")
 
     arrestScale = d3.scaleLinear()
       .range(['#D7D9D7', '#B01116'])
-      .domain([0, 12.5])
+      .domain([0, 19.5])
 
     totalScale = d3.scaleLinear()
       .range(['#D7D9D7', '#B01116'])
-      .domain([0, 786.25])
+      .domain([0, 776.875])
 
     var selectScale = radioVal === 'total' ? totalScale : arrestScale
 
@@ -126,7 +128,7 @@ d3.json("zcta-refined-nodupes.json")
       .attr("stop-opacity", 1);
 
     key.append("rect")
-      .attr("width", 170)
+      .attr("width", 160)
       .attr("height", 20)
       .style("fill", "url(#gradient)")
       .attr('stroke', 'black')
@@ -144,13 +146,13 @@ d3.json("zcta-refined-nodupes.json")
       .attr('class', 'gradient-max')
       .style('fill', 'black')
       .text(d3.max(selectSubset))
-      .attr("transform", "translate(190,15)")
+      .attr("transform", "translate(180,15)")
       .attr('text-anchor', 'start')
 
     //Bind data and create one path per GeoJSON feature
 
     json.features.forEach((d) => {
-      if (d.properties.ZIPCODE == '00083') {
+      if (skips.includes(d.properties.ZIPCODE)) {
         return null
       }
       // console.log(d.properties.ZIPCODE)
@@ -184,7 +186,7 @@ d3.json("zcta-refined-nodupes.json")
       .attr('class', d => `zcta zip-${d.properties.ZIPCODE}`)
       .style("stroke", '#000')
       .style("stroke-width", '.5')
-      .style('pointer-events', d => d.properties.ZIPCODE == 00083 ? 'none' : 'auto')
+      .style('pointer-events', d => skips.includes(d.properties.ZIPCODE) ? 'none' : 'auto')
       .attr('data-data', (d) => {
         return JSON.stringify(d.properties)
       })
@@ -199,7 +201,7 @@ d3.json("zcta-refined-nodupes.json")
 
         return selectScale(d['properties']['arrest'][lastKey])
       })
-      .style('opacity', d => d.properties.ZIPCODE == 00083 ? '0' : '1')
+      .style('opacity', d => skips.includes(d.properties.ZIPCODE) ? '0' : '1')
       .on("mouseover mousemove", (d) => {
         $("select.zipname").selectize()[0].selectize.setValue(event.target.classList[1])
       })

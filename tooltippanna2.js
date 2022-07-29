@@ -112,9 +112,8 @@ function tipTextMap(data, month, year) {
   <p style="line-height:normal;">${values.hood}</p>
   <strong style="font-size:12pt;">for ${months[month-1].innerText} ${year}</strong>
   <br/><br/>
-  <p style="font-size:13pt;width:100%;float:none;">Evictions: <strong style="color:${values['arrest'][year+month] > 12 ? 'white':'black'};background-color:${arrestScale(values['arrest'][year+month])};">&nbsp;${values['arrest'][year+month]}&nbsp;</strong>
+  <p style="font-size:13pt;width:100%;float:none;">Evictions: <strong style="color:${values['arrest'][year+month] > 10 ? 'white':'black'};background-color:${arrestScale(values['arrest'][year+month])};">&nbsp;${values['arrest'][year+month]}&nbsp;</strong>
   <br/>
-  <p style="font-size:9pt;"><strong>${numeral(values['arrest'][year+month]/arrestAvg).format('0,0%')}</strong> of this month's average</p>
   <p style="font-size:9pt;"><strong>${numeral(values['arrest']['total']).format('0,0')}</strong> evictions here, from January 2017 to June 2022</p>
   </p>
   </div>

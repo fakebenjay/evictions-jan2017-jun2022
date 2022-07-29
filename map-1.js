@@ -159,6 +159,7 @@ d3.json("zcta-refined-nodupes.json")
       // }
 
       var option = document.createElement("option")
+      console.log(d.properties.ZIPCODE)
       option.text = `${d.properties.ZIPCODE} (${d.properties.hood.split(': ')[1]})`
       option.value = 'zip-' + d.properties.ZIPCODE
 

@@ -109,41 +109,31 @@ function tipTextMap(data, month, year) {
   var monthName = radioVal === 'monthly' ? months[month - 1].innerText + " " : ''
   var yearName = radioVal === 'total' ? 'January 2017 to June 2022' : year
 
-  var totalLine = radioVal === 'total' ? '' : `<p style="font-size:9pt;"><strong>${numeral(values['arrest']['total']).format('0,0')}</strong> ${values['arrest']['total'] == 1 ? 'eviction':'evictions'} here, from January 2017 to June 2022</p>`
-  var yearLine = radioVal !== 'monthly' ? '' : `<p style="font-size:9pt;"><strong>${numeral(values['arrest'][yearName + 'XX']).format('0,0')}</strong> ${values['arrest'][yearName + 'XX'] == 1 ? 'eviction':'evictions'} here, in ${yearName.replaceAll('2022', '2022 (to date)')}</p>`
+  var totalLine = radioVal === 'total' ? '' : `<p style="font-size:9pt;"></p>`
+  var yearLine = radioVal !== 'monthly' ? '' : `<p style="font-size:9pt;"></p>`
 
-  return `<span class='quit'>x</span>
-  <div class="tooltip-container">
-  <div class="tooltip-top">
-  <h2>${values.ZIPCODE}</h2>
-  <p style="line-height:normal;">${values.hood}</p>
-  <strong style="font-size:12pt;">for ${monthName} ${yearName}${yearName == 2022 && radioVal === 'yearly' ? ' (to date)':''}</strong>
-  <br/><br/>
-  <p style="font-size:13pt;width:100%;float:none;">Evictions: <strong style="color:${values['arrest'][lastKey] > blackwhite ? 'white':'black'};background-color:${selectScale(values['arrest'][lastKey])};">&nbsp;${numeral(values['arrest'][lastKey]).format('0,0')}&nbsp;</strong>
-  <br/>
-  ${totalLine}
-  ${yearLine}
-  </p>
-  </div>
-  <div class="tooltip-bottom">
-  <div class="tt-chart" style="width:100%;float:none;"></div>
-  </div>
-  </div>`
-}
+  d3.select('#tooltip-1 h2.zipcode')
+    .html(values.ZIPCODE)
 
-function ttBeeswarmData(thisData, allData) {
-  var metric = 'arrest'
-  var dataArray = Object.keys(data[metric]).map((k) => {
-    return {
-      key: k,
-      val: data[metric][k]
-    }
-  })
-  if (mapRadio() === 'yearly') {
-    return dataArray.slice(dataArray.length - 6)
-  } else {
-    return dataArray.slice(0, dataArray.length - 7)
-  }
+  d3.select('#tooltip-1 p.hood')
+    .html(values.hood)
+
+  d3.select('#tooltip-1 p.hood')
+    .html(values.hood)
+
+  d3.select('#tooltip-1 strong.timeframe')
+    .html(`<br/>for ${monthName} ${yearName}${yearName == 2022 && radioVal === 'yearly' ? ' (to date)':''}`)
+
+  d3.select('#tooltip-1 strong.count')
+    .style('color', values['arrest'][lastKey] > blackwhite ? 'white' : 'black')
+    .style('background-color', selectScale(values['arrest'][lastKey]))
+    .html(`&nbsp;${numeral(values['arrest'][lastKey]).format('0,0')}&nbsp;`)
+
+  d3.select('#tooltip-1 p.total-line')
+    .html(radioVal === 'total' ? '' : `<strong>${numeral(values['arrest']['total']).format('0,0')}</strong> ${values['arrest']['total'] == 1 ? 'eviction':'evictions'} here, from January 2017 to June 2022`)
+
+  d3.select('#tooltip-1 p.year-line')
+    .html(radioVal !== 'monthly' ? '' : `<strong>${numeral(values['arrest'][yearName + 'XX']).format('0,0')}</strong> ${values['arrest'][yearName + 'XX'] == 1 ? 'eviction':'evictions'} here, in ${yearName.replaceAll('2022', '2022 (to date)')}`)
 }
 
 function ttChartData(data) {
@@ -162,10 +152,10 @@ function ttChartData(data) {
 }
 
 function tooltipBeeswarm(dataArray) {
-  var miniW = document.querySelector(`#tooltip-1`).offsetWidth - 52
-  var miniH = 80
+  var miniW = document.querySelector(`.tt-beeswarm .tt-chart`).offsetWidth
+  var miniH = 130
   var miniYMargin = 10
-  var miniXMargin = 15
+  var miniXMargin = 18
   var metric = 'arrest'
   var colorMax = -0.749023438
   var max = 0
@@ -180,25 +170,9 @@ function tooltipBeeswarm(dataArray) {
     .range([miniXMargin, miniW - miniXMargin])
     .domain([0, max])
 
-  var xScaleMini2 = d3.scaleLinear()
-    .range([miniXMargin, miniW - miniXMargin])
-    .domain([2017, domainMax2])
-
-  var yScaleMini = d3.scaleLinear()
-    .domain([max, 0])
-    .range([miniYMargin, miniH - miniYMargin])
-
-  var yAxisMini = d3.axisLeft(yScaleMini)
-    .ticks(3)
-    .tickFormat(d => d)
-
-  var xAxisMini2 = d3.axisBottom(xScaleMini2)
-    .ticks(7)
-    .tickFormat(d => d)
-
   var xAxisMini = d3.axisBottom(xScaleMini)
-    .ticks(1)
-    .tickFormat(d => d)
+    .ticks(10)
+    .tickFormat(d => numeral(d).format('0,0'))
 
   var simulation = d3.forceSimulation(dataArray)
     .force("x", d3.forceX(function(d) {
@@ -211,14 +185,26 @@ function tooltipBeeswarm(dataArray) {
   for (var i = 0; i < dataArray.length; i++) {
     simulation.tick(10)
   };
-  debugger
-  var miniSVG = d3.select(`.tt-chart`)
+
+  var miniSVG = d3.select(`.tt-beeswarm .tt-chart`)
     .append("svg")
     .attr("width", miniW)
     .attr("height", miniH);
 
   var miniG = miniSVG.append("g")
     .attr('class', 'beeswarm')
+
+  var xRenderMini = miniG.append("g")
+    .attr("transform", `translate(0,${miniH-20})`)
+    .attr('class', 'x-axis')
+    .call(xAxisMini)
+    .selectAll(".tick")
+    .style('color', '#f3f3f3')
+    .selectAll("text")
+    .style('font-size', '5pt')
+    .attr("transform", `translate(0,-5)`)
+    .style("text-anchor", "middle")
+    .style('fill', 'black')
 
   var vData = d3.voronoi()
     .extent([
@@ -237,8 +223,10 @@ function tooltipBeeswarm(dataArray) {
     .data(dataArray)
     .enter()
     .append("circle")
-    .attr("class", `dot beeswarm-${metric}`)
+    .attr("class", d => `dot beeswarm-${metric} dot-${d.ZIPCODE}`)
     .attr("r", 3)
+    .style('stroke', 'black')
+    .style('fill', 'black')
     .attr("cx", function(d) {
       return d.x;
     })
@@ -248,7 +236,7 @@ function tooltipBeeswarm(dataArray) {
 }
 
 function tooltipChart(dataArray) {
-  var miniW = document.querySelector(`.tt-chart`).offsetWidth
+  var miniW = document.querySelector(`.tt-line .tt-chart`).offsetWidth
   var miniH = 80
   var miniYMargin = 10
   var miniXMargin = 15
@@ -301,7 +289,8 @@ function tooltipChart(dataArray) {
       return yScaleMini(d.val);
     });
 
-  var miniSVG = d3.select(`.tt-chart`)
+  var miniSVG = d3.select(`.tt-line .tt-chart`)
+    .html('')
     .append("svg")
     .attr("width", miniW)
     .attr("height", miniH);
@@ -477,9 +466,13 @@ function mouseoverLine(data, index) {
 function mouseover(i, tipText) {
   var html = tipText
   d3.select(`#tooltip-${i}`)
-    .html(html)
     .attr('display', 'block')
     .style("visibility", "visible")
+
+  if (i > 1) {
+    d3.select(`#tooltip-${i}`)
+      .html(html)
+  }
   // .style('top', topTT(i))
   // .style('left', leftTT(i))
 
@@ -522,6 +515,11 @@ function mouseout(i) {
       .style("visibility", "hidden")
       .style("left", null)
       .style("top", null);
+
+    if (i > 1) {
+      d3.select(`#tooltip-${i}`)
+        .html('')
+    }
   }
 }
 

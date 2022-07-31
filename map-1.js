@@ -19,6 +19,26 @@ var tooltip1 = d3.select("#chart-1")
   .style('visibility', 'hidden')
   .attr('class', 'my-tooltip')
   .attr('id', 'tooltip-1')
+  .html(`<span class='quit'>x</span>
+  <div class="tooltip-container">
+  <div class="tooltip-top">
+  <h2 class='zipcode'></h2>
+  <p class='hood' style="line-height:normal;"></p>
+  <strong class='timeframe' style="font-size:12pt;"></strong>
+  <br/><br/>
+  <p style="font-size:13pt;width:100%;float:none;">Evictions: <strong class='count'></strong>
+  <br/>
+  <p class='total-line' style="font-size:9pt;"></p>
+  <p class='year-line' style="font-size:9pt;"></p>
+  </p>
+  </div>
+  <div class="tooltip-bottom tt-line">
+  <div class="tt-chart" style="width:100%;float:none;"></div>
+  </div>
+  <div class="tooltip-bottom tt-beeswarm">
+  <div class="tt-chart" style="width:100%;float:none;"></div>
+  </div>
+  </div>`)
 
 var arrestSubset
 var monthScale
@@ -64,17 +84,32 @@ function changeZip(d) {
     mouseover(1, tipTextMap(JSON.parse(document.querySelector(`path.${d}`).dataset.data), document.querySelector('select#month').value, document.querySelector('select#year').value))
 
     if (mapRadio() === 'total') {
-      // var uniq = Array.from(document.querySelectorAll('#chart-1 path.zcta')).map(d => JSON.parse(d.dataset.data)).filter((v, i, a) => {
-      //   return a.indexOf(a.find(w => w.ZIPCODE === v.ZIPCODE)) === i
-      // })
-      // tooltipBeeswarm(uniq)
-      tooltipChart(ttChartData(JSON.parse(document.querySelector(`path.${d}`).dataset.data)))
+      d3.selectAll(`#chart-1 .tt-beeswarm .dot`)
+        .style('fill', 'black')
+        .attr('r', 3)
+        .style('stroke-width', 0)
+
+      d3.select(`#chart-1 .tt-beeswarm .${d.replace('zip', 'dot')}`)
+        .style('fill', 'red')
+        .attr('r', 4)
+        .style('stroke', 'black')
+        .style('stroke-width', 1)
+
+      d3.select('.tt-line')
+        .style('display', 'none')
+
+      d3.select('.tt-beeswarm')
+        .style('display', 'block')
     } else {
-      tooltipChart(ttChartData(JSON.parse(document.querySelector(`path.${d}`).dataset.data)))
+      d3.select('.tt-beeswarm')
+        .style('display', 'none')
+
+      d3.select('.tt-line')
+        .style('display', 'block')
     }
+    tooltipChart(ttChartData(JSON.parse(document.querySelector(`path.${d}`).dataset.data)))
   } else {
     d3.select(`#tooltip-1`)
-      .html("")
       .attr('display', 'none')
       .style("visibility", "hidden")
   }
@@ -326,11 +361,30 @@ d3.json("zcta-refined-nodupes.json")
 
           mouseover(1, tipTextMap(selectedD.properties, month, year))
           if (mapRadio() === 'total') {
-            // tooltipBeeswarm(data)
-            tooltipChart(ttChartData(selectedD.properties))
+            d3.selectAll(`#chart-1 .tt-beeswarm .dot`)
+              .style('fill', 'black')
+              .attr('r', 3)
+              .style('stroke-width', 0)
+
+            d3.select(`#chart-1 .tt-beeswarm .dot-${selectedD.properties.ZIPCODE}`)
+              .style('fill', 'red')
+              .attr('r', 4)
+              .style('stroke', 'black')
+              .style('stroke-width', 1)
+
+            d3.select('.tt-line')
+              .style('display', 'none')
+
+            d3.select('.tt-beeswarm')
+              .style('display', 'block')
           } else {
-            tooltipChart(ttChartData(selectedD.properties))
+            d3.select('.tt-beeswarm')
+              .style('display', 'none')
+
+            d3.select('.tt-line')
+              .style('display', 'block')
           }
+          tooltipChart(ttChartData(selectedD.properties))
         }
 
         if (window.innerWidth > 767) {

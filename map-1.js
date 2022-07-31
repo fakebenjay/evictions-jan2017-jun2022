@@ -62,7 +62,12 @@ function changeZip(d) {
       .style('stroke-width', 3)
       .raise()
     mouseover(1, tipTextMap(JSON.parse(document.querySelector(`path.${d}`).dataset.data), document.querySelector('select#month').value, document.querySelector('select#year').value))
-    tooltipChart(ttChartData(JSON.parse(document.querySelector(`path.${d}`).dataset.data)))
+
+    if (mapRadio() === 'total') {
+      tooltipBeeswarm(ttChartData(JSON.parse(document.querySelector(`path.${d}`).dataset.data)))
+    } else {
+      tooltipChart(ttChartData(JSON.parse(document.querySelector(`path.${d}`).dataset.data)))
+    }
   } else {
     d3.select(`#tooltip-1`)
       .html("")
@@ -316,7 +321,11 @@ d3.json("zcta-refined-nodupes.json")
           var selectedD = data.find(d => d.properties.ZIPCODE == zipcode)
 
           mouseover(1, tipTextMap(selectedD.properties, month, year))
-          tooltipChart(ttChartData(selectedD.properties, 'left'), 'left')
+          if (mapRadio() === 'total') {
+            tooltipBeeswarm(ttChartData(selectedD.properties))
+          } else {
+            tooltipChart(ttChartData(selectedD.properties))
+          }
         }
 
         if (window.innerWidth > 767) {

@@ -131,7 +131,7 @@ function tipTextMap(data, month, year) {
   </div>`
 }
 
-function ttChartData(data, side) {
+function ttChartData(data) {
   var metric = 'arrest'
   var dataArray = Object.keys(data[metric]).map((k) => {
     return {
@@ -143,6 +143,155 @@ function ttChartData(data, side) {
     return dataArray.slice(dataArray.length - 6)
   } else {
     return dataArray.slice(0, dataArray.length - 7)
+  }
+}
+
+function tooltipBeeswarm(dataArray) {
+  var miniW = document.querySelector(`.tt-chart`).offsetWidth
+  var miniH = 80
+  var miniYMargin = 10
+  var miniXMargin = 15
+  var metric = 'arrest'
+  var colorMax = -0.749023438
+  var max = 0
+  var domainMax2 = mapRadio() === 'yearly' ? 2022 : 2022 + (5 / 12)
+  var monthsList = ["201701", "201702", "201703", "201704", "201705", "201706", "201707", "201708", "201709", "201710", "201711", "201712", "201801", "201802", "201803", "201804", "201805", "201806", "201807", "201808", "201809", "201810", "201811", "201812", "201901", "201902", "201903", "201904", "201905", "201906", "201907", "201908", "201909", "201910", "201911", "201912", "202001", "202002", "202003", "202004", "202005", "202006", "202007", "202008", "202009", "202010", "202011", "202012", "202101", "202102", "202103", "202104", "202105", "202106", "202107", "202108", "202109", "202110", "202111", "202112", "202201", "202202", "202203", "202204", "202205", "202206"]
+  var domainMax1 = mapRadio() === 'yearly' ? monthsList.slice(0, monthsList.length - 5) : monthsList
+
+  for (let i = 0; i < dataArray.length; i++) {
+    max = dataArray[i]['val'] > max ? dataArray[i]['val'] : max
+  }
+
+  dataArray.forEach(d => d.key = d.key.replace('XX', '01'))
+  // var miniColorScale = d3.scaleLinear()
+  //   .domain([0, 916.625])
+  //   .range(['#f6f7f6', '#b01116'])
+  // .clamp(true)
+
+  var xScaleMini = d3.scalePoint()
+    .range([miniXMargin, miniW - miniXMargin])
+    .domain([0, max])
+
+  var xScaleMini2 = d3.scaleLinear()
+    .range([miniXMargin, miniW - miniXMargin])
+    .domain([2017, domainMax2])
+
+  var yScaleMini = d3.scaleLinear()
+    .domain([max, 0])
+    .range([miniYMargin, miniH - miniYMargin])
+
+  var yAxisMini = d3.axisLeft(yScaleMini)
+    .ticks(3)
+    .tickFormat(d => d)
+
+  var xAxisMini2 = d3.axisBottom(xScaleMini2)
+    .ticks(7)
+    .tickFormat(d => d)
+
+  var xAxisMini = d3.axisBottom(xScaleMini)
+    .ticks(1)
+    .tickFormat(d => d)
+
+  var simulation = d3.forceSimulation(dataArray)
+    .force("x", d3.forceX(function(d) {
+      return xScaleMini(d.val);
+    }).strength(1))
+    .force("y", d3.forceY(height / 2))
+    .force("collide", d3.forceCollide(4))
+    .stop();
+
+  var miniSVG = d3.select(`.tt-chart`)
+    .append("svg")
+    .attr("width", miniW)
+    .attr("height", miniH);
+
+  var miniG = miniSVG.append("g")
+    .attr('class', 'beeswarm')
+    .data(d3.voronoi()
+      .extent([
+        [-margin.left, -margin.top],
+        [miniW + miniXMargin, miniH + miniYMargin]
+      ])
+      .x(function(d) {
+        return d.x;
+      })
+      .y(function(d) {
+        return d.y;
+      })
+      .polygons(dataArray)).enter().append("g");
+
+  // var yRenderMini = miniG.append("g")
+  //   .attr("transform", `translate(${miniXMargin},0)`)
+  //   .attr('class', 'y-axis')
+  //   .call(yAxisMini)
+  //   .selectAll(".tick")
+  //   .style('color', '#f3f3f3')
+  //   .selectAll("text")
+  //   .style('font-size', '5pt')
+  //   .attr("transform", `translate(2,0)`)
+  //   .style("text-anchor", "middle")
+  //   .style('fill', 'black')
+  //
+  // var xRenderMini2 = miniG.append("g")
+  //   .attr("transform", `translate(0,${miniH-10})`)
+  //   .attr('class', 'x-axis')
+  //   .call(xAxisMini2)
+  //   .selectAll(".tick")
+  //   .style('color', '#f3f3f3')
+  //   .selectAll("text")
+  //   .style('font-size', '5pt')
+  //   .attr("transform", `translate(0,-5)`)
+  //   .style("text-anchor", "middle")
+  //   .style('fill', 'black')
+
+  debugger
+
+  miniSVG.selectAll('.beeswarm')
+    .data(dataArray)
+    .append("circle")
+    .attr("class", `dot beeswarm-${metric}`)
+    .attr("r", 3)
+    .attr("cx", function(d) {
+      debugger
+      return d.x;
+    })
+    .attr("cy", function(d) {
+      return d.y;
+    });
+
+
+
+  // .attr("d", (d) => {
+  //   return miniLine(d)
+  // })
+  // .style('stroke', (d) => {
+  //   return 'black'
+  // })
+
+
+
+  if (mapRadio() !== 'total') {
+    var monthDatum = dataArray.filter((d) => {
+      var monthVal = mapRadio() === 'yearly' ? '01' : month.value
+      return d.key === year.value + monthVal
+    })[0]
+
+    var selectScale = mapRadio() === 'yearly' ? yearScale : monthScale
+
+    miniSVG.selectAll(".minilines")
+      .datum(monthDatum)
+      .append("circle")
+      .attr("class", `dot miniline-${metric}`)
+      .attr("cy", function(d) {
+        return miniH - yScaleMini(max - d.val);
+      })
+      .attr("cx", function(d) {
+        return xScaleMini(d.key)
+      })
+      .attr("r", 6)
+      // .style('stroke', '#F7F9F7')
+      .style('stroke', 'black')
+      .style('fill', d => selectScale(d.val))
   }
 }
 

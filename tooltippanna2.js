@@ -223,7 +223,7 @@ function tooltipBeeswarm(dataArray) {
     .data(dataArray)
     .enter()
     .append("circle")
-    .attr("class", d => `dot beeswarm-${metric} dot-${d.ZIPCODE}`)
+    .attr("class", d => `dot beeswarm-${metric} dot-${d.ZIPCODE} ${d.arrest.total == 0 ? 'zero' : d.arrest.total == 1 ? 'one' : 'more'}`)
     .attr("r", 3)
     .style('stroke', 'black')
     .style('fill', 'black')

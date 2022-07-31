@@ -64,7 +64,11 @@ function changeZip(d) {
     mouseover(1, tipTextMap(JSON.parse(document.querySelector(`path.${d}`).dataset.data), document.querySelector('select#month').value, document.querySelector('select#year').value))
 
     if (mapRadio() === 'total') {
-      tooltipBeeswarm(ttChartData(JSON.parse(document.querySelector(`path.${d}`).dataset.data)))
+      // var uniq = Array.from(document.querySelectorAll('#chart-1 path.zcta')).map(d => JSON.parse(d.dataset.data)).filter((v, i, a) => {
+      //   return a.indexOf(a.find(w => w.ZIPCODE === v.ZIPCODE)) === i
+      // })
+      // tooltipBeeswarm(uniq)
+      tooltipChart(ttChartData(JSON.parse(document.querySelector(`path.${d}`).dataset.data)))
     } else {
       tooltipChart(ttChartData(JSON.parse(document.querySelector(`path.${d}`).dataset.data)))
     }
@@ -322,7 +326,8 @@ d3.json("zcta-refined-nodupes.json")
 
           mouseover(1, tipTextMap(selectedD.properties, month, year))
           if (mapRadio() === 'total') {
-            tooltipBeeswarm(ttChartData(selectedD.properties))
+            // tooltipBeeswarm(data)
+            tooltipChart(ttChartData(selectedD.properties))
           } else {
             tooltipChart(ttChartData(selectedD.properties))
           }
@@ -338,6 +343,7 @@ d3.json("zcta-refined-nodupes.json")
   })
   .then(function(json) {
     mapRadio()
+
     document.querySelector('select.zipname').selectedIndex = -1
     var $select = $("select.zipname").selectize({
       placeholder: 'Select a zip...',
@@ -398,4 +404,10 @@ d3.json("zcta-refined-nodupes.json")
       create: false
     })
     $select[0].selectize.refreshOptions(false)
+    return json
+  })
+  .then((json) => {
+    var zipList = json.map(d => d.properties.ZIPCODE).filter((v, i, a) => a.indexOf(v) === i)
+    var data = zipList.map(d => JSON.parse(document.querySelector(`#chart-1 path.zcta.zip-${d}`).dataset.data))
+    tooltipBeeswarm(data)
   });

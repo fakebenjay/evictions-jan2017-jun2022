@@ -152,7 +152,7 @@ function ttChartData(data) {
 }
 
 function tooltipBeeswarm(dataArray) {
-  var miniW = document.querySelector(`.tt-beeswarm .tt-chart`).offsetWidth
+  var miniW = document.querySelector(`#chart-1`).offsetWidth - 58
   var miniH = 130
   var miniYMargin = 10
   var miniXMargin = 18
@@ -444,7 +444,7 @@ function mouseoverLine(data, index) {
 
   d3.select(`#tooltip-${index}`)
     .html(html)
-    .attr('display', 'block')
+    .style('display', 'block')
     .style("visibility", "visible")
     .style('top', topTT(index))
     .style('left', leftTT(index))
@@ -466,7 +466,7 @@ function mouseoverLine(data, index) {
 function mouseover(i, tipText) {
   var html = tipText
   d3.select(`#tooltip-${i}`)
-    .attr('display', 'block')
+    .style('display', 'block')
     .style("visibility", "visible")
 
   if (i > 1) {

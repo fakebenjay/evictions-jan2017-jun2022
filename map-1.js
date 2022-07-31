@@ -17,6 +17,7 @@ var svg1 = d3.select("#chart-1 .chart")
 var tooltip1 = d3.select("#chart-1")
   .append('div')
   .style('visibility', 'hidden')
+  .style('display', 'none')
   .attr('class', 'my-tooltip')
   .attr('id', 'tooltip-1')
   .html(`<span class='quit'>x</span>
@@ -78,6 +79,10 @@ function changeZip(d) {
   d3.selectAll(`#chart-1 path.zcta`)
     .style('stroke-width', .5)
   if (!!d) {
+    d3.select(`#tooltip-1`)
+      .style('display', 'block')
+      .style("visibility", "visible")
+
     d3.selectAll(`#chart-1 path.${d}`)
       .style('stroke-width', 3)
       .raise()

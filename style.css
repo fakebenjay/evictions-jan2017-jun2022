@@ -158,12 +158,20 @@ svg {
   position: absolute;
   /* width: 200px !important; */
   background-color: #f3f3f3;
-  padding: 10px;
+  margin: 10px;
   border: 1px solid black;
   /* border-radius: 10px; */
   font-family: Arial, Helvetica, sans-serif;
   z-index: 500;
   font-size: 10pt;
+}
+
+.box-shadow-right {
+  box-shadow: 3px 3px black;
+}
+
+.box-shadow-left {
+  box-shadow: -3px 3px black;
 }
 
 #chart-1 .my-tooltip {
@@ -186,12 +194,14 @@ svg {
 
 .my-tooltip h2 {
   font-size: 2em;
+  padding: 4px 5px 0 5px;
 }
 
 .hood {
   margin: 0;
-  padding: 0;
+  padding: 0 5px 4px 5px;
   display: inline-block;
+  width: 100%;
 }
 
 .stats {
@@ -219,12 +229,11 @@ svg {
   display: inline-block;
 }
 
-#chart-1 .bottom {
+/* #chart-1 .bottom {
   overflow: auto;
   display: flex;
   align-items: center;
-}
-
+} */
 .source {
   display: inline-block;
   width: 75%;
@@ -239,16 +248,14 @@ svg {
   text-align: right;
   padding: 0 10px;
   bottom: 0;
-  float: right;
 }
 
-#chart-1 .gfx-logo {
-  /* height: 100%; */
+/* #chart-1 .gfx-logo {
+
   text-align: right;
   padding: 0 10px;
-  /* position: absolute; */
-}
 
+} */
 .gfx-logo img {
   width: 100%;
   overflow: visible;

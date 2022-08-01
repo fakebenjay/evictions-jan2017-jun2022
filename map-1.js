@@ -21,13 +21,13 @@ var tooltip1 = d3.select("#chart-1")
   .attr('class', 'my-tooltip')
   .attr('id', 'tooltip-1')
   .html(`<span class='quit'>x</span>
-  <div class="tooltip-container">
-  <div class="tooltip-top">
   <h2 class='zipcode'></h2>
   <p class='hood' style="line-height:normal;"></p>
+  <div class="tooltip-container">
+  <div class="tooltip-top">
   <strong class='timeframe' style="font-size:12pt;"></strong>
-  <br/><br/>
-  <p style="font-size:13pt;width:100%;float:none;">Evictions: <strong class='count'></strong>
+  <br/>
+  <p style="font-size:13pt;width:100%;float:none;padding-top:6px;">Evictions: <strong class='count'></strong>
   <br/>
   <p class='total-line' style="font-size:9pt;"></p>
   <p class='year-line' style="font-size:9pt;"></p>
@@ -46,7 +46,7 @@ var monthScale
 var yearScale
 var totalScale
 
-const skips = []
+const skips = ['11430', '00083', '11251', '11096', '10281']
 
 function dynamicSelect(year, month) {
   document.querySelectorAll('option').forEach(d => d.style.display = 'block')
@@ -90,13 +90,13 @@ function changeZip(d) {
 
     if (mapRadio() === 'total') {
       d3.selectAll(`#chart-1 .tt-beeswarm .dot`)
-        .style('fill', 'black')
-        .attr('r', 3)
-        .style('stroke-width', 0)
+        // .style('fill', 'black')
+        .attr('r', 2)
+        .style('stroke-width', .5)
 
       d3.select(`#chart-1 .tt-beeswarm .${d.replace('zip', 'dot')}`)
-        .style('fill', 'red')
-        .attr('r', 4)
+        // .style('fill', 'red')
+        .attr('r', 5)
         .style('stroke', 'black')
         .style('stroke-width', 1)
 
@@ -115,7 +115,7 @@ function changeZip(d) {
     tooltipChart(ttChartData(JSON.parse(document.querySelector(`path.${d}`).dataset.data)))
   } else {
     d3.select(`#tooltip-1`)
-      .attr('display', 'none')
+      .style('display', 'none')
       .style("visibility", "hidden")
   }
 }
@@ -248,9 +248,9 @@ d3.json("zcta-refined-nodupes.json")
 
         var lastKey = radioVal === 'total' ? radioVal : year + month
 
-        return selectScale(d['properties']['arrest'][lastKey])
+        return skips.includes(d.properties.ZIPCODE) ? 'white' : selectScale(d['properties']['arrest'][lastKey])
       })
-      .style('opacity', d => skips.includes(d.properties.ZIPCODE) ? '0' : '1')
+      .style('opacity', 1)
       .on("mouseover mousemove", (d) => {
         $("select.zipname").selectize()[0].selectize.setValue(event.target.classList[1])
       })
@@ -357,7 +357,7 @@ d3.json("zcta-refined-nodupes.json")
             var month = radioVal === 'yearly' ? 'XX' : document.getElementById('month').value
 
             var lastKey = radioVal === 'total' ? radioVal : year + month
-            return selectScale(d['properties']['arrest'][lastKey])
+            return skips.includes(d.properties.ZIPCODE) ? 'white' : selectScale(d['properties']['arrest'][lastKey])
           })
 
         if (document.querySelector('#chart-1 .my-tooltip').style.visibility !== 'hidden') {
@@ -367,14 +367,11 @@ d3.json("zcta-refined-nodupes.json")
           mouseover(1, tipTextMap(selectedD.properties, month, year))
           if (mapRadio() === 'total') {
             d3.selectAll(`#chart-1 .tt-beeswarm .dot`)
-              .style('fill', 'black')
-              .attr('r', 3)
-              .style('stroke-width', 0)
+              .attr('r', 2)
+              .style('stroke-width', .5)
 
             d3.select(`#chart-1 .tt-beeswarm .dot-${selectedD.properties.ZIPCODE}`)
-              .style('fill', 'red')
-              .attr('r', 4)
-              .style('stroke', 'black')
+              .attr('r', 5)
               .style('stroke-width', 1)
 
             d3.select('.tt-line')

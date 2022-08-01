@@ -114,15 +114,50 @@ function tipTextMap(data, month, year) {
 
   d3.select('#tooltip-1 h2.zipcode')
     .html(values.ZIPCODE)
+    .datum(data)
+    .style('background-color', d => {
+      if (d.boro === 'Manhattan') {
+        return '#F9C80E'
+      } else if (d.boro === 'Brooklyn') {
+        return '#ED6A5A'
+      } else if (d.boro === 'Queens') {
+        return '#654F6F'
+      } else if (d.boro === 'The Bronx') {
+        return '#6BA292'
+      } else if (d.boro === 'Staten Island') {
+        return '#56A9DE'
+      }
+    })
+    .style('color', d => d.boro === 'Manhattan' ? 'black' : 'white')
+
+  d3.select('#tooltip-1 .quit')
+    .datum(data)
+    .style('color', d => d.boro === 'Manhattan' ? 'black' : 'white')
+    .style('opacity', .5)
 
   d3.select('#tooltip-1 p.hood')
     .html(values.hood)
+    .datum(data)
+    .style('background-color', d => {
+      if (d.boro === 'Manhattan') {
+        return '#F9C80E'
+      } else if (d.boro === 'Brooklyn') {
+        return '#ED6A5A'
+      } else if (d.boro === 'Queens') {
+        return '#654F6F'
+      } else if (d.boro === 'The Bronx') {
+        return '#6BA292'
+      } else if (d.boro === 'Staten Island') {
+        return '#56A9DE'
+      }
+    })
+    .style('color', d => d.boro === 'Manhattan' ? 'black' : 'white')
 
   d3.select('#tooltip-1 p.hood')
     .html(values.hood)
 
   d3.select('#tooltip-1 strong.timeframe')
-    .html(`<br/>for ${monthName} ${yearName}${yearName == 2022 && radioVal === 'yearly' ? ' (to date)':''}`)
+    .html(`for ${monthName} ${yearName}${yearName == 2022 && radioVal === 'yearly' ? ' (to date)':''}`)
 
   d3.select('#tooltip-1 strong.count')
     .style('color', values['arrest'][lastKey] > blackwhite ? 'white' : 'black')
@@ -152,7 +187,7 @@ function ttChartData(data) {
 }
 
 function tooltipBeeswarm(dataArray) {
-  var miniW = document.querySelector(`#chart-1`).offsetWidth - 58
+  var miniW = document.querySelector(`#chart-1`).offsetWidth - 52
   var miniH = 130
   var miniYMargin = 10
   var miniXMargin = 18
@@ -166,6 +201,9 @@ function tooltipBeeswarm(dataArray) {
   for (let i = 0; i < dataArray.length; i++) {
     max = dataArray[i]['arrest']['total'] > max ? dataArray[i]['arrest']['total'] : max
   }
+
+  var dataArray = dataArray.filter(d => !skips.includes(d.ZIPCODE))
+
   var xScaleMini = d3.scaleLinear()
     .range([miniXMargin, miniW - miniXMargin])
     .domain([0, max])
@@ -223,16 +261,84 @@ function tooltipBeeswarm(dataArray) {
     .data(dataArray)
     .enter()
     .append("circle")
-    .attr("class", d => `dot beeswarm-${metric} dot-${d.ZIPCODE} ${d.arrest.total == 0 ? 'zero' : d.arrest.total == 1 ? 'one' : 'more'}`)
-    .attr("r", 3)
+    .attr("class", d => `dot beeswarm-${metric} dot-${d.ZIPCODE} ${d.boro.toLowerCase().replaceAll('the ', '').replaceAll(' island', '')} ${d.arrest.total == 0 ? 'zero' : d.arrest.total == 1 ? 'one' : 'more'}`)
+    .attr("r", 2)
     .style('stroke', 'black')
-    .style('fill', 'black')
+    .style('stroke-width', .5)
+    .style('fill', d => {
+      if (d.boro === 'Manhattan') {
+        return '#F9C80E'
+      } else if (d.boro === 'Brooklyn') {
+        return '#ED6A5A'
+      } else if (d.boro === 'Queens') {
+        return '#654F6F'
+      } else if (d.boro === 'The Bronx') {
+        return '#6BA292'
+      } else if (d.boro === 'Staten Island') {
+        return '#56A9DE'
+      }
+    })
     .attr("cx", function(d) {
       return d.x;
     })
     .attr("cy", function(d) {
       return d.y;
     });
+
+  var legend = d3.select(`.tt-beeswarm .tt-chart`)
+    .append('div')
+    .style('display', 'flex')
+
+
+  legend.append('div')
+    .text('Manhattan')
+    .style('background-color', '#F9C80E')
+    .style('color', 'black')
+    .style('width', '20%')
+    .style('display', 'flex')
+    .style('align-items', 'center')
+    .style('line-height', 'normal')
+    .style('justify-content', 'center')
+
+  legend.append('div')
+    .text('The Bronx')
+    .style('background-color', '#6BA292')
+    .style('color', 'white')
+    .style('width', '20%')
+    .style('display', 'flex')
+    .style('align-items', 'center')
+    .style('line-height', 'normal')
+    .style('justify-content', 'center')
+
+  legend.append('div')
+    .text('Brooklyn')
+    .style('background-color', '#ED6A5A')
+    .style('color', 'white')
+    .style('width', '20%')
+    .style('display', 'flex')
+    .style('align-items', 'center')
+    .style('line-height', 'normal')
+    .style('justify-content', 'center')
+
+  legend.append('div')
+    .text('Queens')
+    .style('background-color', '#654F6F')
+    .style('color', 'white')
+    .style('width', '20%')
+    .style('display', 'flex')
+    .style('align-items', 'center')
+    .style('line-height', 'normal')
+    .style('justify-content', 'center')
+
+  legend.append('div')
+    .text('Staten Island')
+    .style('background-color', '#56A9DE')
+    .style('color', 'white')
+    .style('width', '20%')
+    .style('display', 'flex')
+    .style('align-items', 'center')
+    .style('line-height', 'normal')
+    .style('justify-content', 'center')
 }
 
 function tooltipChart(dataArray) {
@@ -545,6 +651,7 @@ function leftTT(d) {
   var offsetParent = document.querySelector(`#chart-${d} .chart`).offsetParent
   var offX = offsetParent.offsetLeft
   var cursorX = 25
+  var clientX = document.querySelector(`#chart-${d} .chart`).offsetLeft
 
   var windowWidth = window.innerWidth
   var cw = document.querySelector(`#tooltip-${d}`).clientWidth
@@ -552,7 +659,8 @@ function leftTT(d) {
   var bodyWidth = document.querySelector(`#chart-${d} .chart`).clientWidth
 
   if (windowWidth > 767) {
-    if (cw + cx - ((windowWidth - bodyWidth) / 2) >= bodyWidth) {
+    if (cw + cx - clientX + cursorX >= bodyWidth) {
+      // if (cw + cx >= bodyWidth) {
       document.querySelector(`#tooltip-${d}`).className = 'my-tooltip box-shadow-left'
       return cx - cw - cursorX + "px"
     } else {

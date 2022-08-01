@@ -134,7 +134,7 @@ function tipTextMap(data, month, year) {
   var selectScale = radioVal === 'total' ? totalScale : radioVal === 'yearly' ? yearScale : monthScale
   var blackwhite = selectScale.domain()[1] / 2.2
   var monthName = radioVal === 'monthly' ? months[month - 1].innerText + " " : ''
-  var yearName = radioVal === 'total' ? 'January 2017 to June 2022' : year
+  var yearName = radioVal === 'total' ? 'January 2017 to July 2022' : year
 
   var totalLine = radioVal === 'total' ? '' : `<p style="font-size:9pt;"></p>`
   var yearLine = radioVal !== 'monthly' ? '' : `<p style="font-size:9pt;"></p>`
@@ -192,7 +192,7 @@ function tipTextMap(data, month, year) {
     .html(`&nbsp;${numeral(values['arrest'][lastKey]).format('0,0')}&nbsp;`)
 
   d3.select('#tooltip-1 p.total-line')
-    .html(radioVal === 'total' ? '' : `<strong>${numeral(values['arrest']['total']).format('0,0')}</strong> ${values['arrest']['total'] == 1 ? 'eviction':'evictions'} here, from January 2017 to June 2022`)
+    .html(radioVal === 'total' ? '' : `<strong>${numeral(values['arrest']['total']).format('0,0')}</strong> ${values['arrest']['total'] == 1 ? 'eviction':'evictions'} here, from January 2017 to July 2022`)
 
   d3.select('#tooltip-1 p.year-line')
     .html(radioVal !== 'monthly' ? '' : `<strong>${numeral(values['arrest'][yearName + 'XX']).format('0,0')}</strong> ${values['arrest'][yearName + 'XX'] == 1 ? 'eviction':'evictions'} here, in ${yearName.replaceAll('2022', '2022 (to date)')}`)
@@ -221,9 +221,6 @@ function tooltipBeeswarm(dataArray) {
   var metric = 'arrest'
   var colorMax = -0.749023438
   var max = 0
-  var domainMax2 = mapRadio() === 'yearly' ? 2022 : 2022 + (5 / 12)
-  var monthsList = ["201701", "201702", "201703", "201704", "201705", "201706", "201707", "201708", "201709", "201710", "201711", "201712", "201801", "201802", "201803", "201804", "201805", "201806", "201807", "201808", "201809", "201810", "201811", "201812", "201901", "201902", "201903", "201904", "201905", "201906", "201907", "201908", "201909", "201910", "201911", "201912", "202001", "202002", "202003", "202004", "202005", "202006", "202007", "202008", "202009", "202010", "202011", "202012", "202101", "202102", "202103", "202104", "202105", "202106", "202107", "202108", "202109", "202110", "202111", "202112", "202201", "202202", "202203", "202204", "202205", "202206"]
-  var domainMax1 = mapRadio() === 'yearly' ? monthsList.slice(0, monthsList.length - 5) : monthsList
 
   for (let i = 0; i < dataArray.length; i++) {
     max = dataArray[i]['arrest']['total'] > max ? dataArray[i]['arrest']['total'] : max
@@ -286,7 +283,8 @@ function tooltipBeeswarm(dataArray) {
   //   .polygons(dataArray)
 
   dataArray.sort((a, b) => a.arrest.total > b.arrest.total)
-  var median = dataArray[Math.floor(dataArray.length / 2)].arrest.total
+  var median = 210
+  // var median = dataArray[Math.floor(dataArray.length / 2)].arrest.total
 
   miniG.append('line')
     .attr('stroke', '#555555')
@@ -298,7 +296,7 @@ function tooltipBeeswarm(dataArray) {
     .attr('y2', miniH - miniYMargin - miniYMargin)
 
   miniG.append('text')
-    .text("Median (184)")
+    .text("Median (210)")
     .attr('fill', '#555555')
     .style('font-size', '7pt')
     .attr('x', xScaleMini(median) + 5)
@@ -395,9 +393,9 @@ function tooltipChart(dataArray) {
   var metric = 'arrest'
   var colorMax = -0.749023438
   var max = 0
-  var domainMax2 = mapRadio() === 'yearly' ? 2022 : 2022 + (5 / 12)
-  var monthsList = ["201701", "201702", "201703", "201704", "201705", "201706", "201707", "201708", "201709", "201710", "201711", "201712", "201801", "201802", "201803", "201804", "201805", "201806", "201807", "201808", "201809", "201810", "201811", "201812", "201901", "201902", "201903", "201904", "201905", "201906", "201907", "201908", "201909", "201910", "201911", "201912", "202001", "202002", "202003", "202004", "202005", "202006", "202007", "202008", "202009", "202010", "202011", "202012", "202101", "202102", "202103", "202104", "202105", "202106", "202107", "202108", "202109", "202110", "202111", "202112", "202201", "202202", "202203", "202204", "202205", "202206"]
-  var domainMax1 = mapRadio() === 'yearly' ? monthsList.slice(0, monthsList.length - 5) : monthsList
+  var domainMax2 = mapRadio() === 'yearly' ? 2022 : 2022 + (6 / 12)
+  var monthsList = dataArray.map(d => d.key)
+  var domainMax1 = monthsList.map(d => d.replaceAll('XX', '01'))
 
   for (let i = 0; i < dataArray.length; i++) {
     max = dataArray[i]['val'] > max ? dataArray[i]['val'] : max
@@ -473,18 +471,6 @@ function tooltipChart(dataArray) {
     .attr("transform", `translate(0,-5)`)
     .style("text-anchor", "middle")
     .style('fill', 'black')
-
-  // var xRenderMini = miniG.append("g")
-  //   .attr("transform", `translate(0,${miniH-50})`)
-  //   .attr('class', 'x-axis')
-  //   .call(xAxisMini)
-  //   .selectAll(".tick")
-  //   .style('color', '#f3f3f3')
-  //   .selectAll("text")
-  //   .style('font-size', '5pt')
-  //   .attr("transform", `translate(0,-5)`)
-  //   .style("text-anchor", "middle")
-  //   .style('fill', 'black')
 
 
   if (mapRadio() === 'yearly') {

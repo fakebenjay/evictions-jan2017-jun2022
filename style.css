@@ -204,6 +204,13 @@ svg {
   color: #777;
 }
 
+#tooltip-1 .quit {
+  float: right;
+  display: block;
+  width: 2%;
+  height: 12pt;
+}
+
 .my-tooltip h2 {
   font-size: 2em;
   padding: 4px 5px 0 5px;

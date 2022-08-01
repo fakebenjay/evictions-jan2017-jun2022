@@ -55,13 +55,11 @@ function dynamicSelect(year, month) {
     // if (month !== '06') {
     //   document.querySelector("option[value='06']").selected = true
     // }
-    document.querySelector("option[value='07']").disabled = true
     document.querySelector("option[value='08']").disabled = true
     document.querySelector("option[value='09']").disabled = true
     document.querySelector("option[value='10']").disabled = true
     document.querySelector("option[value='11']").disabled = true
     document.querySelector("option[value='12']").disabled = true
-    document.querySelector("option[value='07']").style.display = 'none'
     document.querySelector("option[value='08']").style.display = 'none'
     document.querySelector("option[value='09']").style.display = 'none'
     document.querySelector("option[value='10']").style.display = 'none'
@@ -69,7 +67,7 @@ function dynamicSelect(year, month) {
     document.querySelector("option[value='12']").style.display = 'none'
   }
 
-  if (month > 6) {
+  if (month > 7) {
     document.querySelector("option[value='2022']").disabled = true
     document.querySelector("option[value='2022']").style.display = 'none'
   }
@@ -121,7 +119,7 @@ function changeZip(d) {
 }
 
 //Load in GeoJSON data
-d3.json("zcta-refined-nodupes.json")
+d3.json("zcta-refined.json")
   .then(function(json) {
     var radioVal = mapRadio()
 
@@ -138,15 +136,15 @@ d3.json("zcta-refined-nodupes.json")
 
     yearScale = d3.scaleLinear()
       .range(['#D7D9D7', '#B01116'])
-      .domain([0, 248.5])
+      .domain([0, 268])
 
     monthScale = d3.scaleLinear()
       .range(['#D7D9D7', '#B01116'])
-      .domain([0, 22])
+      .domain([0, 24.5])
 
     totalScale = d3.scaleLinear()
       .range(['#D7D9D7', '#B01116'])
-      .domain([0, 776.875])
+      .domain([0, 835.5])
 
     var selectScale = radioVal === 'total' ? totalScale : radioVal === 'yearly' ? yearScale : monthScale
 

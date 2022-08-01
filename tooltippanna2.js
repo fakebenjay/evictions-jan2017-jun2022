@@ -97,6 +97,33 @@ ${lines.join('')}
   </div>`
 }
 
+function tipTextLine5(data) {
+  var months = document.getElementById('month').children
+  var year = data.monthyear.split('/')[0]
+  var month = data.monthyear.split('/')[1]
+  var values = data
+
+  var filingsLine = `<p style="font-size:12pt;width:100%;float:none;"><span style="background-color:#6ba292;color:white;">&nbsp;Filings&nbsp;</span> <strong>${numeral(values.filings).format('0,0')}</strong></p>`
+  var executedLine = `<p style="font-size:12pt;width:100%;float:none;"><span style="background-color:#ed6a5a;color:black;">&nbsp;Executed&nbsp;</span> <strong>${numeral(values.executed).format('0,0')}</strong></p>`
+  var warrantsLine = `<p style="font-size:12pt;width:100%;float:none;"><span style="background-color:#654f6f;color:white;">&nbsp;Warrants&nbsp;</span> <strong>${numeral(values.warrants).format('0,0')}</strong></p>`
+
+  var lines = [filingsLine, executedLine, warrantsLine]
+  lines.sort((b, a) => {
+    return parseInt(values[a.split('&nbsp;')[1].toLowerCase()]) - parseInt(values[b.split('&nbsp;')[1].toLowerCase()])
+  })
+
+
+  return `<span class='quit'>x</span>
+  <div class="tooltip-container">
+  <div class="tooltip-top tooltip-whole">
+  <h2>Eviction Warrants</h2>
+  <strong style="font-size:12pt;">for ${months[month-1].innerText} ${year}</strong>
+  <br/><br/>
+${lines.join('')}
+  </div>
+  </div>`
+}
+
 function tipTextMap(data, month, year) {
   var months = document.getElementById('month').children
   var values = data
@@ -539,9 +566,9 @@ var bisectDate = d3.bisector(function(d) {
 function mouseoverLine(data, index) {
   var x0 = d3.mouse(event.target)[0],
     i = bisectDate(data, x0, 1),
-    xScaleYear = index == 2 ? xScale2 : index == 3 ? xScale3 : xScale4,
-    xScaleMonth = index == 2 ? xScaleMonth2 : index == 3 ? xScaleMonth3 : xScaleMonth4,
-    tipText = index == 2 ? tipTextLine2 : index == 3 ? tipTextLine3 : tipTextLine4
+    xScaleYear = index == 2 ? xScale2 : index == 3 ? xScale3 : index == 4 ? xScale4 : xScale5,
+    xScaleMonth = index == 2 ? xScaleMonth2 : index == 3 ? xScaleMonth3 : index == 4 ? xScaleMonth4 : xScaleMonth5,
+    tipText = index == 2 ? tipTextLine2 : index == 3 ? tipTextLine3 : index == 4 ? tipTextLine4 : tipTextLine5
 
   var d0 = data[i - 1] !== 'dummy' ? data[i - 1] : data[i],
     d1 = i < data.length ? data[i] : data[i - 1]

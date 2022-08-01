@@ -27,9 +27,9 @@ function mapRadio() {
 }
 
 function radio(i) {
-  var borosG = i == 2 ? borosG2 : i == 3 ? borosG3 : borosG4
-  var citywideG = i == 2 ? citywideG2 : i == 3 ? citywideG3 : citywideG4
-  var key = i == 2 ? 'eviction' : i == 3 ? 'filing' : 'warrant'
+  var borosG = i == 2 ? borosG2 : i == 3 ? borosG3 : i == 4 ? borosG4 : borosG5
+  var citywideG = i == 2 ? citywideG2 : i == 3 ? citywideG3 : i == 4 ? citywideG4 : citywideG5
+  var key = i == 2 ? 'eviction' : i == 3 ? 'filing' : i == 4 ? 'warrant' : 'allstats'
   var value = document.querySelector(`#chart-${i} input[name="${key}"]:checked`).value
 
   if (value === 'citywide') {

@@ -108,14 +108,13 @@ svg {
   /* pointer-events: none; */
 }
 
-.legend-box fieldset * {
+/* .legend-box fieldset * {
   pointer-events: none;
 }
 
 .legend-box fieldset option {
   pointer-events: all;
-}
-
+} */
 .legend li {
   margin: 0 5px;
   display: inline-block;

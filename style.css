@@ -20,7 +20,7 @@ div.container {
   pointer-events: none;
 }
 
-.form-select * {
+.form-select option, .form-select input, .select-monthyear, .selectize-control, .selectize-control * {
   pointer-events: all;
 }
 
@@ -105,6 +105,15 @@ svg {
   display: block;
   float: left;
   margin: 0;
+  pointer-events: none;
+}
+
+.legend-box fieldset * {
+  pointer-events: none;
+}
+
+.legend-box fieldset option {
+  pointer-events: all;
 }
 
 .legend li {

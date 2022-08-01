@@ -192,6 +192,10 @@ svg {
   padding: 0 15px;
 }
 
+.tooltip-whole {
+  margin: 0 0 5px 0;
+}
+
 .quit {
   text-align: center;
   display: none;

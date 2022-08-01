@@ -27,7 +27,7 @@ function tipTextLine2(data) {
 
   return `<span class='quit'>x</span>
   <div class="tooltip-container">
-  <div class="tooltip-top">
+  <div class="tooltip-top tooltip-whole">
   <h2>Evictions Executed</h2>
   <strong style="font-size:12pt;">for ${months[month-1].innerText} ${year}</strong>
   <br/><br/>
@@ -57,7 +57,7 @@ function tipTextLine3(data) {
 
   return `<span class='quit'>x</span>
   <div class="tooltip-container">
-  <div class="tooltip-top">
+  <div class="tooltip-top tooltip-whole">
   <h2>Eviction Filings</h2>
   <strong style="font-size:12pt;">for ${months[month-1].innerText} ${year}</strong>
   <br/><br/>
@@ -87,7 +87,7 @@ function tipTextLine4(data) {
 
   return `<span class='quit'>x</span>
   <div class="tooltip-container">
-  <div class="tooltip-top">
+  <div class="tooltip-top tooltip-whole">
   <h2>Eviction Warrants</h2>
   <strong style="font-size:12pt;">for ${months[month-1].innerText} ${year}</strong>
   <br/><br/>

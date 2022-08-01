@@ -188,7 +188,7 @@ function ttChartData(data) {
 
 function tooltipBeeswarm(dataArray) {
   var miniW = document.querySelector(`#chart-1`).offsetWidth - 52
-  var miniH = 130
+  var miniH = window.innerWidth > 460 ? 130 : 160
   var miniYMargin = 10
   var miniXMargin = 18
   var metric = 'arrest'
@@ -231,6 +231,7 @@ function tooltipBeeswarm(dataArray) {
 
   var miniG = miniSVG.append("g")
     .attr('class', 'beeswarm')
+    .style('transform', 'translate(5px,0)')
 
   var xRenderMini = miniG.append("g")
     .attr("transform", `translate(0,${miniH-20})`)
@@ -244,18 +245,37 @@ function tooltipBeeswarm(dataArray) {
     .style("text-anchor", "middle")
     .style('fill', 'black')
 
-  var vData = d3.voronoi()
-    .extent([
-      [miniXMargin, miniYMargin],
-      [miniW - miniXMargin, miniH - miniYMargin]
-    ])
-    .x(function(d) {
-      return d.x;
-    })
-    .y(function(d) {
-      return d.y;
-    })
-    .polygons(dataArray)
+  // var vData = d3.voronoi()
+  //   .extent([
+  //     [miniXMargin, miniYMargin],
+  //     [miniW - miniXMargin, miniH - miniYMargin]
+  //   ])
+  //   .x(function(d) {
+  //     return d.x;
+  //   })
+  //   .y(function(d) {
+  //     return d.y;
+  //   })
+  //   .polygons(dataArray)
+
+  dataArray.sort((a, b) => a.arrest.total > b.arrest.total)
+  var median = dataArray[Math.floor(dataArray.length / 2)].arrest.total
+
+  miniG.append('line')
+    .attr('stroke', '#555555')
+    .attr('stroke-width', '2px')
+    .attr('stroke-dasharray', '5px 2px')
+    .attr('x1', xScaleMini(median))
+    .attr('x2', xScaleMini(median))
+    .attr('y1', miniYMargin)
+    .attr('y2', miniH - miniYMargin - miniYMargin)
+
+  miniG.append('text')
+    .text("Median (184)")
+    .attr('fill', '#555555')
+    .style('font-size', '7pt')
+    .attr('x', xScaleMini(median) + 5)
+    .attr('y', miniYMargin * 2)
 
   miniG.selectAll('circle')
     .data(dataArray)
@@ -288,7 +308,6 @@ function tooltipBeeswarm(dataArray) {
   var legend = d3.select(`.tt-beeswarm .tt-chart`)
     .append('div')
     .style('display', 'flex')
-
 
   legend.append('div')
     .text('Manhattan')

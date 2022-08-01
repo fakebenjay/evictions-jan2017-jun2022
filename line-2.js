@@ -20,7 +20,7 @@ var citywideG2 = svg2.append('g')
 // Add X scale
 var xScale2 = d3.scaleLinear()
   .range([margin.left, width - margin.right])
-  .domain([2017, 2022 + (5 / 12)])
+  .domain([2017, 2022 + (6 / 12)])
 
 var xScaleMonth2 = d3.scaleLinear()
   .range([0, xScale2(2018) - xScale2(2017)])
@@ -33,7 +33,7 @@ var xAxis2 = d3.axisBottom(xScale2)
 
 // Add Y scale
 var yScale2 = d3.scaleLinear()
-  .domain([800, 0])
+  .domain([900, 0])
   .range([0, height - (margin.top + margin.bottom)])
 
 // Define Y axis and format tick marks
@@ -44,11 +44,11 @@ var yAxis2 = d3.axisLeft(yScale2)
 var yGrid2 = d3.axisLeft(yScale2)
   .tickSize(-width + margin.right + margin.left, 0, 0)
   .tickFormat("")
-  .ticks(6)
+  .ticks(12)
 
 // Add Y scale
 var yScale2Citywide = d3.scaleLinear()
-  .domain([2000, 0])
+  .domain([2100, 0])
   .range([0, height - (margin.top + margin.bottom)])
 
 // Define Y axis and format tick marks
@@ -143,7 +143,7 @@ svg2.append('rect')
   .lower();
 
 
-d3.csv("line2-data-nodupes.csv")
+d3.csv("line2-data.csv")
   .then(function(csv) {
     var citywide = d3.line()
       .x(function(d) {

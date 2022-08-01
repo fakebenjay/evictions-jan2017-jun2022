@@ -17,7 +17,7 @@ var citywideG5 = svg5.append('g')
 // Add X scale
 var xScale5 = d3.scaleLinear()
   .range([margin.left, width - margin.right])
-  .domain([2017, 2022 + (5 / 12)])
+  .domain([2017, 2022 + (6 / 12)])
 
 var xScaleMonth5 = d3.scaleLinear()
   .range([0, xScale5(2018) - xScale5(2017)])
@@ -138,7 +138,7 @@ d3.csv("line5-data.csv")
       .style('stroke', '#ed6a5a')
 
     citywideG5.select('.lines')
-      .data([csv])
+      .data([csv.slice(0, csv.length - 1)])
       .append("path")
       .attr("class", "line filings")
       .attr("d", (d) => {
@@ -147,7 +147,7 @@ d3.csv("line5-data.csv")
       .style('stroke', '#6ba292')
 
     citywideG5.select('.lines')
-      .data([csv])
+      .data([csv.slice(0, csv.length - 1)])
       .append("path")
       .attr("class", "line warrants")
       .attr("d", (d) => {

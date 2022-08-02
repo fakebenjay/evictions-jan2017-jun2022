@@ -132,7 +132,7 @@ function tipTextMap(data, month, year) {
   var month = radioVal === 'yearly' ? 'XX' : month
   var lastKey = radioVal === 'total' ? radioVal : year + month
   var selectScale = radioVal === 'total' ? totalScale : radioVal === 'yearly' ? yearScale : monthScale
-  var blackwhite = selectScale.domain()[1] / 2.2
+  var blackwhite = selectScale.domain()[1] / 2.5
   var monthName = radioVal === 'monthly' ? months[month - 1].innerText + " " : ''
   var yearName = radioVal === 'total' ? 'January 2017 to July 2022' : year
 

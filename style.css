@@ -209,6 +209,9 @@ svg {
   display: block;
   width: 2%;
   height: 12pt;
+  right: 1.5px;
+  top: 1.5px;
+  position: absolute;
 }
 
 .my-tooltip h2 {

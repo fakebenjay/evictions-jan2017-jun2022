@@ -180,6 +180,61 @@ function tipTextMap(data, month, year) {
     })
     .style('color', d => d.boro === 'Manhattan' ? 'black' : 'white')
 
+  d3.selectAll('#tooltip-1 .timeframe')
+    .html(values.hood)
+    .datum(data)
+    .style('background-color', (d) => {
+      if (d.boro === 'Manhattan') {
+        return '#F9C80E'
+      } else if (d.boro === 'Brooklyn') {
+        return '#ED6A5A'
+      } else if (d.boro === 'Queens') {
+        return '#654F6F'
+      } else if (d.boro === 'The Bronx') {
+        return '#6BA292'
+      } else if (d.boro === 'Staten Island') {
+        return '#56A9DE'
+      }
+    })
+    .style('color', d => d.boro === 'Manhattan' ? 'black' : 'white')
+
+  function boxShadow(d) {
+    if (d.boro === 'Manhattan') {
+      return '0 -5px 0 0 #F9C80E'
+    } else if (d.boro === 'Brooklyn') {
+      return '0 -5px 0 0 #ED6A5A'
+    } else if (d.boro === 'Queens') {
+      return '0 -5px 0 0 #654F6F'
+    } else if (d.boro === 'The Bronx') {
+      return '0 -5px 0 0 #6BA292'
+    } else if (d.boro === 'Staten Island') {
+      return '0 -5px 0 0 #56A9DE'
+    }
+  }
+
+  Array.from(document.styleSheets[1].cssRules).find(d => d.selectorText == '.timeframe::before').style['box-shadow'] = boxShadow(data)
+  Array.from(document.styleSheets[1].cssRules).find(d => d.selectorText == '.timeframe::after').style['box-shadow'] = boxShadow(data)
+  // debugger
+  // document.styleSheets[1].cssRules[37].style['box-shadow'] = boxShadow(data)
+  // document.styleSheets[1].cssRules[38].style['box-shadow'] = boxShadow(data)
+
+  d3.selectAll('#tooltip-1 .timeframe::before')
+    .html(values.hood)
+    .datum(data)
+    .style('box-shadow', (d) => {
+      if (d.boro === 'Manhattan') {
+        return '0 -5px 0 0 #F9C80E'
+      } else if (d.boro === 'Brooklyn') {
+        return '0 -5px 0 0 #ED6A5A'
+      } else if (d.boro === 'Queens') {
+        return '0 -5px 0 0 #654F6F'
+      } else if (d.boro === 'The Bronx') {
+        return '0 -5px 0 0 #6BA292'
+      } else if (d.boro === 'Staten Island') {
+        return '0 -5px 0 0 #56A9DE'
+      }
+    })
+
   d3.select('#tooltip-1 p.hood')
     .html(values.hood)
 
@@ -189,6 +244,7 @@ function tipTextMap(data, month, year) {
   d3.select('#tooltip-1 strong.count')
     .style('color', values['arrest'][lastKey] > blackwhite ? 'white' : 'black')
     .style('background-color', selectScale(values['arrest'][lastKey]))
+    .style('border-radius', '3px')
     .html(`&nbsp;${numeral(values['arrest'][lastKey]).format('0,0')}&nbsp;`)
 
   d3.select('#tooltip-1 p.total-line')
@@ -300,7 +356,7 @@ function tooltipBeeswarm(dataArray) {
     .attr('fill', '#555555')
     .style('font-size', '7pt')
     .attr('x', xScaleMini(median) + 5)
-    .attr('y', miniYMargin * 2)
+    .attr('y', miniYMargin * 2 - 5)
 
   miniG.selectAll('circle')
     .data(dataArray)
@@ -334,6 +390,7 @@ function tooltipBeeswarm(dataArray) {
     .append('div')
     .style('display', 'flex')
 
+
   legend.append('div')
     .text('Manhattan')
     .style('background-color', '#F9C80E')
@@ -343,6 +400,7 @@ function tooltipBeeswarm(dataArray) {
     .style('align-items', 'center')
     .style('line-height', 'normal')
     .style('justify-content', 'center')
+    .style('border-radius', '4px 0 0 4px')
 
   legend.append('div')
     .text('The Bronx')
@@ -383,6 +441,7 @@ function tooltipBeeswarm(dataArray) {
     .style('align-items', 'center')
     .style('line-height', 'normal')
     .style('justify-content', 'center')
+    .style('border-radius', '0 4px 4px 0')
 }
 
 function tooltipChart(dataArray) {

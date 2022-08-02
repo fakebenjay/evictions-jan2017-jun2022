@@ -223,6 +223,35 @@ svg {
   width: 100%;
 }
 
+.timeframe {
+  border-radius: 0 0 5px 5px;
+  position: relative;
+  padding: 0 10px 3px 10px;
+  top: -1px
+}
+
+.timeframe::before {
+  content: "";
+  position: absolute;
+  background-color: transparent;
+  height: 10px;
+  width: 5px;
+  border-top-left-radius: 25px;
+  box-shadow: 0 -5px 0 0 #654F6F;
+  left: 100%;
+}
+
+.timeframe::after {
+  content: "";
+  position: absolute;
+  background-color: transparent;
+  height: 10px;
+  width: 5px;
+  border-top-right-radius: 25px;
+  box-shadow: 0 -5px 0 0 #654F6F;
+  right: 100%;
+}
+
 .stats {
   margin: 10px 0 0 0;
   padding: 0;
@@ -339,8 +368,11 @@ svg {
   .quit {
     float: right;
     display: block;
-    width: 2%;
+    width: 0px;
     height: 12pt;
+    right: 1.5px;
+    top: 1.5px;
+    position: absolute;
   }
 
   .form-select {

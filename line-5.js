@@ -173,7 +173,7 @@ d3.csv("line5-data.csv")
       .style('stroke-width', 0)
 
     citywideG5.selectAll(".lines")
-      .data(csv)
+      .data(csv.slice(0, csv.length - 1))
       .enter()
       .append("circle") // Uses the enter().append() method
       .attr("class", d => `dot eviction warrants yr-${d.monthyear.replaceAll('/', '')}`) // Assign a class for styling
@@ -188,7 +188,7 @@ d3.csv("line5-data.csv")
       .style('stroke-width', 0)
 
     citywideG5.selectAll(".lines")
-      .data(csv)
+      .data(csv.slice(0, csv.length - 1))
       .enter()
       .append("circle") // Uses the enter().append() method
       .attr("class", d => `dot eviction filings yr-${d.monthyear.replaceAll('/', '')}`) // Assign a class for styling

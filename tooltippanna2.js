@@ -103,14 +103,17 @@ function tipTextLine5(data) {
   var month = data.monthyear.split('/')[1]
   var values = data
 
-  var filingsLine = `<p style="font-size:12pt;width:100%;float:none;"><span style="background-color:#6ba292;color:white;">&nbsp;Filings&nbsp;</span> <strong>${numeral(values.filings).format('0,0')}</strong></p>`
+  var filingsLine = !!data.filings ? `<p style="font-size:12pt;width:100%;float:none;"><span style="background-color:#6ba292;color:white;">&nbsp;Filings&nbsp;</span> <strong>${numeral(values.filings).format('0,0')}</strong></p>` : ''
   var executedLine = `<p style="font-size:12pt;width:100%;float:none;"><span style="background-color:#ed6a5a;color:black;">&nbsp;Executed&nbsp;</span> <strong>${numeral(values.executed).format('0,0')}</strong></p>`
-  var warrantsLine = `<p style="font-size:12pt;width:100%;float:none;"><span style="background-color:#654f6f;color:white;">&nbsp;Warrants&nbsp;</span> <strong>${numeral(values.warrants).format('0,0')}</strong></p>`
+  var warrantsLine = !!data.warrants ? `<p style="font-size:12pt;width:100%;float:none;"><span style="background-color:#654f6f;color:white;">&nbsp;Warrants&nbsp;</span> <strong>${numeral(values.warrants).format('0,0')}</strong></p>` : ''
 
   var lines = [filingsLine, executedLine, warrantsLine]
-  lines.sort((b, a) => {
-    return parseInt(values[a.split('&nbsp;')[1].toLowerCase()]) - parseInt(values[b.split('&nbsp;')[1].toLowerCase()])
-  })
+
+  if (!!data.filings && !!data.warrants) {
+    lines.sort((b, a) => {
+      return parseInt(values[a.split('&nbsp;')[1].toLowerCase()]) - parseInt(values[b.split('&nbsp;')[1].toLowerCase()])
+    })
+  }
 
 
   return `<span class='quit'>x</span>
@@ -121,6 +124,7 @@ function tipTextLine5(data) {
   <br/><br/>
 ${lines.join('')}
   </div>
+  ${!data.filings && !data.warrants ? '<small style="padding:0 10px 10px 10px;">Filings and warrants data not yet available for July 2022</small>': ''}
   </div>`
 }
 

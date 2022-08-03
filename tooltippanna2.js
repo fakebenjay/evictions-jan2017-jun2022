@@ -115,7 +115,6 @@ function tipTextLine5(data) {
     })
   }
 
-
   return `<span class='quit'>x</span>
   <div class="tooltip-container">
   <div class="tooltip-top tooltip-whole">
@@ -633,7 +632,8 @@ function mouseoverLine(data, index) {
     .attr('r', 8)
     .raise()
 
-  var boros = Object.keys(d).slice(1, 6)
+  var boros = Object.keys(d).slice(1, Object.keys(d).length)
+
   boros.sort((a, b) => {
     return parseInt(d[a]) - parseInt(d[b])
   })

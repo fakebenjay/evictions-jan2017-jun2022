@@ -49,6 +49,7 @@ citywideG5.append("g")
   .attr("class", "grid")
   .style('color', '#777777')
   .style('opacity', '0.3')
+  .style('pointer-events', 'none')
   .call(yGrid5Citywide)
 
 // Render Y axis

@@ -118,7 +118,7 @@ function tipTextLine5(data) {
   return `<span class='quit'>x</span>
   <div class="tooltip-container">
   <div class="tooltip-top tooltip-whole">
-  <h2>Eviction Warrants</h2>
+  <h2>Evictions</h2>
   <strong style="font-size:12pt;">for ${months[month-1].innerText} ${year}</strong>
   <br/><br/>
 ${lines.join('')}
@@ -342,7 +342,7 @@ function tooltipBeeswarm(dataArray) {
   //   .polygons(dataArray)
 
   dataArray.sort((a, b) => a.arrest.total > b.arrest.total)
-  var median = 210
+  var median = 192
   // var median = dataArray[Math.floor(dataArray.length / 2)].arrest.total
 
   miniG.append('line')
@@ -355,7 +355,7 @@ function tooltipBeeswarm(dataArray) {
     .attr('y2', miniH - miniYMargin - miniYMargin)
 
   miniG.append('text')
-    .text("Median (210)")
+    .text("Median (192)")
     .attr('fill', '#555555')
     .style('font-size', '7pt')
     .attr('x', xScaleMini(median) + 5)
@@ -625,7 +625,7 @@ function mouseoverLine(data, index) {
   var html = tipText(d)
 
   d3.selectAll(`#chart-${index} .dot`)
-    .attr('r', 1)
+    .attr("r", 1.5)
     .lower()
 
   d3.selectAll(`#chart-${index} .dot.yr-${d.monthyear.replaceAll('/','')}`)
@@ -653,7 +653,7 @@ function mouseoverLine(data, index) {
   d3.select(`#tooltip-${index} .quit`)
     .on('click', () => {
       d3.selectAll(`#chart-${index} .dot`)
-        .attr("r", 1)
+        .attr("r", 1.5)
 
       d3.select(`#tooltip-${index}`)
         .html("")
@@ -707,7 +707,7 @@ function mouseout(i) {
       .style('stroke-width', 0.5)
 
     d3.selectAll(`#chart-${i} .dot`)
-      .attr("r", 1)
+      .attr("r", 1.5)
       .lower()
 
     d3.select(`#tooltip-${i}`)

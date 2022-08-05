@@ -136,15 +136,15 @@ d3.json("zcta-refined.json")
 
     yearScale = d3.scaleLinear()
       .range(['#D7D9D7', '#B01116'])
-      .domain([0, 268])
+      .domain([0, 250.5])
 
     monthScale = d3.scaleLinear()
       .range(['#D7D9D7', '#B01116'])
-      .domain([0, 24.5])
+      .domain([0, 22])
 
     totalScale = d3.scaleLinear()
       .range(['#D7D9D7', '#B01116'])
-      .domain([0, 835.5])
+      .domain([0, 800])
 
     var selectScale = radioVal === 'total' ? totalScale : radioVal === 'yearly' ? yearScale : monthScale
 

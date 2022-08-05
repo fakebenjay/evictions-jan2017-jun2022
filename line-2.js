@@ -33,7 +33,7 @@ var xAxis2 = d3.axisBottom(xScale2)
 
 // Add Y scale
 var yScale2 = d3.scaleLinear()
-  .domain([900, 0])
+  .domain([800, 0])
   .range([0, height - (margin.top + margin.bottom)])
 
 // Define Y axis and format tick marks
@@ -48,7 +48,7 @@ var yGrid2 = d3.axisLeft(yScale2)
 
 // Add Y scale
 var yScale2Citywide = d3.scaleLinear()
-  .domain([2100, 0])
+  .domain([2000, 0])
   .range([0, height - (margin.top + margin.bottom)])
 
 // Define Y axis and format tick marks
@@ -260,7 +260,7 @@ d3.csv("line2-data.csv")
       .attr("cx", function(d) {
         return xScale2(d.monthyear.split('/')[0]) + xScaleMonth2(d.monthyear.split('/')[1])
       })
-      .attr("r", 1)
+      .attr("r", 1.5)
       .style('fill', '#132a43')
       .style('stroke-width', 0)
 
@@ -275,7 +275,7 @@ d3.csv("line2-data.csv")
       .attr("cx", function(d) {
         return xScale2(d.monthyear.split('/')[0]) + xScaleMonth2(d.monthyear.split('/')[1])
       })
-      .attr("r", 1)
+      .attr("r", 1.5)
       .style('fill', '#6BA292')
       .style('stroke-width', 0)
 
@@ -290,7 +290,7 @@ d3.csv("line2-data.csv")
       .attr("cx", function(d) {
         return xScale2(d.monthyear.split('/')[0]) + xScaleMonth2(d.monthyear.split('/')[1])
       })
-      .attr("r", 1)
+      .attr("r", 1.5)
       .style('fill', '#ED6A5A')
       .style('stroke-width', 0)
 
@@ -305,7 +305,7 @@ d3.csv("line2-data.csv")
       .attr("cx", function(d) {
         return xScale2(d.monthyear.split('/')[0]) + xScaleMonth2(d.monthyear.split('/')[1])
       })
-      .attr("r", 1)
+      .attr("r", 1.5)
       .style('fill', '#F9C80E')
       .style('stroke-width', 0)
 
@@ -320,7 +320,7 @@ d3.csv("line2-data.csv")
       .attr("cx", function(d) {
         return xScale2(d.monthyear.split('/')[0]) + xScaleMonth2(d.monthyear.split('/')[1])
       })
-      .attr("r", 1)
+      .attr("r", 1.5)
       .style('fill', '#654f6f')
       .style('stroke-width', 0)
 
@@ -335,7 +335,7 @@ d3.csv("line2-data.csv")
       .attr("cx", function(d) {
         return xScale2(d.monthyear.split('/')[0]) + xScaleMonth2(d.monthyear.split('/')[1])
       })
-      .attr("r", 1)
+      .attr("r", 1.5)
       .style('fill', '#56A9DE')
       .style('stroke-width', 0)
 

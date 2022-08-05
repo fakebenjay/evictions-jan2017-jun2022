@@ -169,7 +169,7 @@ d3.csv("line5-data.csv")
       .attr("cx", function(d) {
         return xScale5(d.monthyear.split('/')[0]) + xScaleMonth5(d.monthyear.split('/')[1])
       })
-      .attr("r", 1)
+      .attr("r", 1.5)
       .style('fill', '#ed6a5a')
       .style('stroke-width', 0)
 
@@ -184,7 +184,7 @@ d3.csv("line5-data.csv")
       .attr("cx", function(d) {
         return xScale5(d.monthyear.split('/')[0]) + xScaleMonth5(d.monthyear.split('/')[1])
       })
-      .attr("r", 1)
+      .attr("r", 1.5)
       .style('fill', '#654f6f')
       .style('stroke-width', 0)
 
@@ -199,7 +199,7 @@ d3.csv("line5-data.csv")
       .attr("cx", function(d) {
         return xScale5(d.monthyear.split('/')[0]) + xScaleMonth5(d.monthyear.split('/')[1])
       })
-      .attr("r", 1)
+      .attr("r", 1.5)
       .style('fill', '#6ba292')
       .style('stroke-width', 0)
 

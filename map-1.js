@@ -119,7 +119,7 @@ function changeZip(d) {
 }
 
 //Load in GeoJSON data
-d3.json("zcta-refined.json")
+d3.json("zip-refined.json")
   .then(function(json) {
     var radioVal = mapRadio()
 
@@ -144,7 +144,7 @@ d3.json("zcta-refined.json")
 
     totalScale = d3.scaleLinear()
       .range(['#D7D9D7', '#B01116'])
-      .domain([0, 800])
+      .domain([0, 797.5])
 
     var selectScale = radioVal === 'total' ? totalScale : radioVal === 'yearly' ? yearScale : monthScale
 
@@ -245,8 +245,15 @@ d3.json("zcta-refined.json")
         var month = radioVal === 'yearly' ? 'XX' : document.getElementById('month').value
 
         var lastKey = radioVal === 'total' ? radioVal : year + month
-
+        //Overall
         return skips.includes(d.properties.ZIPCODE) ? 'white' : selectScale(d['properties']['arrest'][lastKey])
+
+        //Per 1000 capita
+        // return skips.includes(d.properties.ZIPCODE) ? 'white' : monthScale(1000 * (d['properties']['arrest'][lastKey] / d['properties']['POPULATION']))
+
+        //pop
+        // console.log(d.properties.ZIPCODE + ' ' + d['properties']['POPULATION'])
+        // return skips.includes(d.properties.ZIPCODE) ? 'white' : monthScale((d['properties']['POPULATION']) / 5000)
       })
       .style('opacity', 1)
       .on("mouseover mousemove", (d) => {

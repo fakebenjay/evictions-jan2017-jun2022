@@ -44,7 +44,7 @@ function radio(i) {
 }
 
 var winWidth = document.getElementById('article-body').offsetWidth
-var rawWidth = document.getElementById('chart-1').offsetWidth
+var rawWidth = document.getElementById('chart-2').offsetWidth
 var width = rawWidth;
 var height = 300;
 

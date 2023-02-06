@@ -20,7 +20,7 @@ var citywideG2 = svg2.append('g')
 // Add X scale
 var xScale2 = d3.scaleLinear()
   .range([margin.left, width - margin.right])
-  .domain([2017, 2022 + (6 / 12)])
+  .domain([2017, 2022 + (11 / 12)])
 
 var xScaleMonth2 = d3.scaleLinear()
   .range([0, xScale2(2018) - xScale2(2017)])
@@ -143,7 +143,7 @@ svg2.append('rect')
   .lower();
 
 
-d3.csv("line2-data.csv")
+d3.csv("line2-2023.csv")
   .then(function(csv) {
     var citywide = d3.line()
       .x(function(d) {

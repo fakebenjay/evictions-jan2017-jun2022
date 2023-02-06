@@ -4,17 +4,17 @@
 <head>
   <meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Graphics template</title>
-  <script type="text/javascript" src="https://assets.law360news.com/1390000/1390755/d3.v5.min.js"></script>
-  <script src="https://assets.law360news.com/1390000/1390755/topojson.v2.min.js"></script>
-  <script src="https://assets.law360news.com/1390000/1390755/numeral.min.js"></script>
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
-  <script src="tooltippanna2.js"></script>
+  <script type="text/javascript" src="https://assets.law360news.com/1513000/1513877/d3.v5.min.js"></script>
+  <!-- <script src="https://assets.law360news.com/1513000/1513877/topojson.v2.min.js"></script> -->
+  <script src="https://assets.law360news.com/1513000/1513877/numeral.min.js"></script>
+  <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script> -->
+  <script src="tooltipv2.js"></script>
   <script src="offsetting.js" defer></script>
-  <script type="text/javascript" src="selectize.min.js"></script>
-  <link rel="stylesheet" type="text/css" href="selectize.css" />
+  <!-- <script type="text/javascript" src="https://assets.law360news.com/1513000/1513877/selectize.min.js"></script> -->
+  <!-- <link rel="stylesheet" type="text/css" href="https://assets.law360news.com/1513000/1513877/selectize.css" /> -->
   <link rel="stylesheet" href="style.css">
   </link>
-  <link rel="stylesheet" href="https://static.law360news.com/201909/assets/responsive-next-32ff265ae0f6b45b6915cb7a719db907337029c2785605cef88fffa548aadd9e.css">
+  <link rel="stylesheet" href="https://static.law360news.com/201909/assets/authority-37ed4f3121b2aa2bd05ce55a0835c8aca33270e0fc31fabc49fc0455ab74680a.css">
   </link>
 </head>
 
@@ -23,20 +23,13 @@
 
 
     <div id="article-body">
-      <div class="d3-container a2j" id="chart-1">
+      <!-- <div class="d3-container a2j" id="chart-1">
         <div style="width:100%;height:6px;background-color:#654F6F;display:block;"></div>
         <span class='hed'>Court-Ordered Evictions, January 2017 to July 2022</span>
         <p class="dek">Evictions are inching back from a pandemic-induced freeze. </p>
 
         <div class="chart">
           <div class='form-select'>
-            <!-- <input type="radio" id="arrest" name="drone" value="arrest">
-            <label for="huey">Arrests</label>
-            <br />
-            <input type="radio" id="summons" name="drone" value="summons" checked>
-            <label for="huey">Summonses</label>
-            <br />
-            <br /> -->
             <select class="zipname" name="zipname">
             </select>
             <p><strong>Timeframe</strong></p>
@@ -85,14 +78,14 @@
         <div class="mobile-legend">
 
         </div>
-        <span class="bottom"><span class="source">Source: <a href="https://data.cityofnewyork.us/City-Government/Evictions/6z8x-wfk4" target="_blank">NYC Department of Investigation</a></span><span class="gfx-logo"><img src="Law360_REA-logo@2x.png"
-              style="width:100%;" /></span></span>
-      </div>
-      <script type="text/javascript" src="map-1.js" defer></script>
+        <span class="bottom"><span class="source">Source: <a href="https://data.cityofnewyork.us/City-Government/Evictions/6z8x-wfk4" target="_blank">NYC Department of Investigation</a></span><span class="gfx-logo"><img
+              src="https://assets.law360news.com/1513000/1513877/law360_rea-logo@2x.png" style="width:100%;" /></span></span>
+      </div> -->
+      <!-- <script type="text/javascript" src="map-1v6.js" defer></script> -->
       <br /><br />
       <div class="d3-container a2j" id="chart-2">
         <div style="width:100%;height:6px;background-color:#654F6F;display:block;"></div>
-        <span class="hed">Evictions Executed, January 2017 to July 2022</span>
+        <span class="hed">Evictions Executed, January 2017 to December 2022</span>
         <div class="chart"></div>
 
         <div class="legend-box">
@@ -128,109 +121,17 @@
           </ul>
         </div>
         <span class="bottom"><span class="source">Source: <a href="https://data.cityofnewyork.us/City-Government/Evictions/6z8x-wfk4" target="_blank">NYC Department of Investigation</a></span><span class="gfx-logo"><img
-              src="Law360_REA-logo@2x.png" /></span></span>
+              src="https://assets.law360news.com/1513000/1513877/law360_rea-logo@2x.png" /></span></span>
       </div>
       <script type="text/javascript" src="line-2.js" defer></script>
       <br /><br />
-      <!-- <div class="d3-container a2j" id="chart-3">
-        <div style="width:100%;height:6px;background-color:#654F6F;display:block;"></div>
-        <span class="hed">NYC Eviction Filings By Month, 2017 to Present</span>
-        <div class="chart"></div>
 
-        <div class="legend-box">
-          <fieldset>
-            <legend>Select a view:</legend>
-            <div>
-              <input type="radio" name="filing" value="boro" checked>
-              <label for="boro">Boroughs</label>
-            </div>
-            <div>
-              <input type="radio" name="filing" value="citywide">
-              <label for="citywide">Citywide</label>
-            </div>
-          </fieldset>
-          <ul class="legend">
-            <li class="manhattan">
-              <div class="legend-sq"></div> Manhattan
-            </li>
-            <li class="bronx">
-              <div class="legend-sq">
-              </div> The Bronx
-            </li>
-            <li class="brooklyn">
-              <div class="legend-sq"></div> Brooklyn
-            </li>
-            <li class="queens">
-              <div class="legend-sq">
-              </div> Queens
-            </li>
-            <li class="staten">
-              <div class="legend-sq"></div> Staten Island
-            </li>
-          </ul>
-        </div>
-        <span class="bottom"><span class="source">Source: NYS Unified Court System, Division of Technology & Court Research</span><span class="gfx-logo"><img src="Law360_REA-logo@2x.png" /></span></span>
-      </div>
-      <script type="text/javascript" src="line-3.js" defer></script>
-      <br /><br />
-      <div class="d3-container a2j" id="chart-4">
-        <div style="width:100%;height:6px;background-color:#654F6F;display:block;"></div>
-        <span class="hed">NYC Eviction Warrants By Month, 2017 to Present</span>
-        <div class="chart"></div>
-
-        <div class="legend-box">
-          <fieldset>
-            <legend>Select a view:</legend>
-            <div>
-              <input type="radio" name="warrant" value="boro" checked>
-              <label for="boro">Boroughs</label>
-            </div>
-            <div>
-              <input type="radio" name="warrant" value="citywide">
-              <label for="citywide">Citywide</label>
-            </div>
-          </fieldset>
-          <ul class="legend">
-            <li class="manhattan">
-              <div class="legend-sq"></div> Manhattan
-            </li>
-            <li class="bronx">
-              <div class="legend-sq">
-              </div> The Bronx
-            </li>
-            <li class="brooklyn">
-              <div class="legend-sq"></div> Brooklyn
-            </li>
-            <li class="queens">
-              <div class="legend-sq">
-              </div> Queens
-            </li>
-            <li class="staten">
-              <div class="legend-sq"></div> Staten Island
-            </li>
-          </ul>
-        </div>
-        <span class="bottom"><span class="source">Source: NYS Unified Court System, Division of Technology & Court Research</span><span class="gfx-logo"><img src="Law360_REA-logo@2x.png" /></span></span>
-      </div>
-      <script type="text/javascript" src="line-4.js" defer></script>
-      <br /><br /> -->
       <div class="d3-container a2j" id="chart-5">
         <div style="width:100%;height:6px;background-color:#654F6F;display:block;"></div>
-        <span class="hed">Citywide Eviction Metrics, January 2017 to July 2022</span>
+        <span class="hed">NYC Eviction Metrics, January 2017 to December 2022</span>
         <div class="chart"></div>
 
         <div class="legend-box">
-          <!-- <fieldset>
-            <legend>Select a view:</legend>
-            <div>
-              <input type="radio" name="allstats" value="boro" checked>
-              <label for="boro">Boroughs</label>
-            </div>
-            <div>
-              <input type="radio" name="allstats" value="citywide">
-              <label for="citywide">Citywide</label>
-            </div>
-          </fieldset> -->
           <ul class="legend" style="width:100%;">
             <li class="bronx">
               <div class="legend-sq">
@@ -245,7 +146,9 @@
             </li>
           </ul>
         </div>
-        <span class="bottom"><span class="source">Source: NYC Department of Investigation, NYS Unified Court System</span><span class="gfx-logo"><img src="Law360_REA-logo@2x.png" /></span></span>
+        <span class="bottom"><span class="source">Source: <a href="https://data.cityofnewyork.us/City-Government/Evictions/6z8x-wfk4" target="_blank">NYC Department of Investigation</a>, <a
+              href="https://app.powerbigov.us/view?r=eyJrIjoiZGE3NzljYmItYTBmZC00OGI2LTliYTgtYzY5ZjI0N2U0MWYxIiwidCI6IjM0NTZmZTkyLWNiZDEtNDA2ZC1iNWEzLTUzNjRiZWMwYTgzMyJ9" target="_blank">NYS Unified Court System</a></span><span class="gfx-logo"><img
+              src="https://assets.law360news.com/1513000/1513877/law360_rea-logo@2x.png" /></span></span>
       </div>
       <script type="text/javascript" src="line-5.js" defer></script>
     </div>

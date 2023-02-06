@@ -17,7 +17,7 @@ var citywideG5 = svg5.append('g')
 // Add X scale
 var xScale5 = d3.scaleLinear()
   .range([margin.left, width - margin.right])
-  .domain([2017, 2022 + (6 / 12)])
+  .domain([2017, 2022 + (11 / 12)])
 
 var xScaleMonth5 = d3.scaleLinear()
   .range([0, xScale5(2018) - xScale5(2017)])
@@ -103,7 +103,9 @@ svg5.append('rect')
   .lower();
 
 
-d3.csv("line5-data.csv")
+// d3.csv("https://assets.law360news.com/1513000/1513877/line5-data.csv")
+d3.csv("line5-2023.csv")
+
   .then(function(csv) {
     var executed = d3.line()
       .x(function(d) {
